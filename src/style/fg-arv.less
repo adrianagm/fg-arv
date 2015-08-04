@@ -1,0 +1,226 @@
+// out: ./fg-arv.css
+/*
+ * First Group Alternative Routes Viewer.
+ * @version 0.0.1
+ */
+@fg-arv_form-bg: #313131;
+@fg-arv_plain-text-color: #fff;
+@fg-arv_mobile-break-max: 767px;
+@fg-arv_over1000-break-max: 1024px;
+@fg-arv_images-dir: "images";
+.fg-arv-widget {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  .gm-style {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    text-decoration: inherit;
+  }
+  .map {
+    width: 100%;
+    height: 100%;
+  }
+  .form {
+    padding-left: 0;
+    &.error {
+      .to-component:not(.has-error),
+      .transfer-component:not(.has-error),
+      .from-component:not(.has-error),
+      .go-component.simple {
+        padding-top: 51px;
+        height: 105px;
+        @media screen {
+          @media (max-width: @fg-arv_over1000-break-max) {
+            padding-top: 70px;
+          }
+        }
+        @media screen {
+          @media (max-width: @fg-arv_mobile-break-max) {
+            padding-top: 5px;
+            height: auto;
+          }
+        }
+        .marker-icon.input-icon {
+          @media screen {
+            @media (max-width: @fg-arv_mobile-break-max) {
+              top:9px;
+            }
+          }
+        }
+      }
+      .to-component.has-error, .from-component.has-error {
+        height:105px;
+        @media screen {
+          @media (max-width: @fg-arv_mobile-break-max) {
+            height: auto;
+          }
+        }
+        &:after {
+          @media screen {
+            @media (max-width: @fg-arv_over1000-break-max) {
+              bottom: 9px;
+            }
+          }
+        }
+      }
+      .to-component, .from-component {
+        &:after {
+          @media screen {
+            @media (max-width: @fg-arv_over1000-break-max) {
+              bottom: 8px;
+            }
+          }
+        }
+      }
+    }
+    @media screen {
+      @media (max-width: @fg-arv_mobile-break-max) {
+        width: auto;
+      }
+    }
+    .form-components-container {
+      padding-left: 0;
+    }
+    .xxs-screen {
+      padding-left: 10px;
+      @media screen {
+        @media (max-width: 430px) {
+          width: 100%;
+        }
+      }
+    }
+    .row {
+      margin: 0 !important;
+    }
+    .form-component {
+      background: @fg-arv_form-bg;
+      padding: 10px 10px 20px;
+      @media screen {
+        @media (max-width: @fg-arv_mobile-break-max) {
+          padding: 5px 10px;
+        }
+      }
+      .form-subcomponent {
+        padding: 0;
+        border-radius: 3px;
+      }
+      &.fg-arv_date-component {
+        padding-bottom: 21px;
+        @media screen {
+            @media (max-width: @fg-arv_mobile-break-max) {
+              padding-bottom: 6px;
+            }
+          }
+      }
+    }
+    button {
+      height: 34px;
+      border: hidden; 
+      box-shadow: none;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+    }
+    .from-component {
+      padding-left: 10px;
+      input {
+        padding-left: 25px;
+      }
+      
+       &.focused .input-icon{
+        opacity: 1;
+      }
+      @media screen {
+        @media (max-width: @fg-arv_mobile-break-max) {
+          padding-top: 10px;
+        }
+      }
+    }
+    .transfer-component {
+      padding-left: 0;
+      padding-right: 0;
+      @media screen {
+        height: auto;
+      }
+      button {
+        background-color: @fg-arv_form-bg;
+        padding-left: 0;
+        padding-right: 0;
+        span {
+          background: url("@{fg-arv_images-dir}/transfer-sm.png") center 2px no-repeat;
+          background-size: 100%;
+          width: 24px;
+          height: 24px;
+          display: inline-block;
+        }
+      }
+    }
+    .to-component {
+      input {
+        padding-left: 25px;
+      }
+      &.focused .input-icon{
+        opacity: 1;
+      }      
+      @media screen {
+        @media (max-width: @fg-arv_mobile-break-max) {
+          padding-top: 9px;
+        }
+      }
+    }
+    .journey-mode-component {
+      @media screen {
+        @media (max-width: @fg-arv_mobile-break-max) {
+          //padding-right: 5px;
+        }
+      }
+    }
+    .time-component {
+      @media screen {
+        @media (max-width: @fg-arv_mobile-break-max) {
+          padding-left: 5px;
+        }
+      }
+    }
+    .go-component {
+      min-width: 70px;
+      padding-right: 10px;
+      @media screen {
+        @media (max-width: @fg-arv_mobile-break-max) {
+          padding-bottom: 20px;
+        }
+      }
+    }
+    &.basic {
+      .complete-form-only {
+        display: none !important;
+        visibility: hidden !important;
+      }
+    }
+    &.complete {
+      .basic-form-only {
+        display: none !important;
+        visibility: hidden !important;
+      }
+    }
+    .extra {
+      color: @fg-arv_plain-text-color;
+      text-align: right;
+      font-size: 12px;
+      white-space: nowrap;
+      position: absolute;
+      right: 10px;
+      bottom: 2px;
+      a.toggle-mode-link {
+        color: @fg-arv_plain-text-color;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+  
+  //------ Imports -------
+  //···· Components ······
+
+}

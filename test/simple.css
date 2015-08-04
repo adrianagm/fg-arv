@@ -1,0 +1,19 @@
+/* Sample. Not needed for final deployment. */
+
+html, body {
+  height: 100%;
+}
+
+.container {
+	margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 1272px;
+}
+.fg-arv-test-element {
+  margin-top: 20px;
+  height: 600px;
+  width: 1200px;
+  border: 2px solid black;
+}

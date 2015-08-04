@@ -1,0 +1,8 @@
+/dist/
+/node_modules/
+.idea
+*~
+*.orig
+/src/style/*.css
+/fg-arv/
+*.zip
