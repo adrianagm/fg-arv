@@ -16,17 +16,13 @@ function initialise_jp() {
       getDOMElementID: function() {
         return "fg-arv-element";
       },
-      getInitialMapCenter: function() {
-        this.getCurrentUserLocation().done(function(location) {
-          return location;
-        });
-      },
-      getCurrentUserLocation: function() {
-        var location = {
-          lat: 51.5072,
-          lng: 0.1275
-        }; // London Big Ben by default.;
-        return location;
+      getInitialFormValues: function() {
+        return {
+          from: 'London',
+          to: 'Swansea',
+          date: new Date(),
+          time: '18:00'
+        }; // For testing.
       }
     };
 

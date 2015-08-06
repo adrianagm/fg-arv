@@ -1,0 +1,46 @@
+.time-picker {
+  background: @fg-arv_plain-text-color;
+  position: relative;
+  display: table-cell; 
+ 
+  .icon-box.clickable {
+    color: @fg-arv_action-color;
+    position: absolute;
+    right: 10px;
+    top: 8px;
+  }
+  .btn{
+    width: 100%;
+    border: none;
+    background-color:@fg-arv_plain-text-color;
+   
+  }
+ .dropdown-menu{
+    min-width: 0;
+  }
+ 
+}
+
+ .main-dropdown{
+    .icon-box.icon {
+      position: absolute;
+      left: 10px;
+      top: 1px;
+      width: 26px;
+      height: 34px;
+      background: url('@{fg-arv_images-dir}/time-icon.png') center 2px no-repeat;
+      background-size: 100%;
+    }
+    .btn{ 
+      border-right: 1px dashed #313131;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  .second-dropdown{
+    .btn{ 
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }

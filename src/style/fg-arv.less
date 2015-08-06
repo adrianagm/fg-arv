@@ -5,6 +5,11 @@
  */
 @fg-arv_form-bg: #313131;
 @fg-arv_plain-text-color: #fff;
+@fg-arv_action-color: #c00;
+@fg-arv_marker-bg-color: #fd3c43;
+@fg-arv_marker-from-bg-color: #639d41;
+@fg-arv_marker-to-bg-color: #92183A;
+@fg-arv_transparent: rgba(0,0,0,0);
 @fg-arv_mobile-break-max: 767px;
 @fg-arv_over1000-break-max: 1024px;
 @fg-arv_images-dir: "images";
@@ -137,25 +142,6 @@
         }
       }
     }
-    .transfer-component {
-      padding-left: 0;
-      padding-right: 0;
-      @media screen {
-        height: auto;
-      }
-      button {
-        background-color: @fg-arv_form-bg;
-        padding-left: 0;
-        padding-right: 0;
-        span {
-          background: url("@{fg-arv_images-dir}/transfer-sm.png") center 2px no-repeat;
-          background-size: 100%;
-          width: 24px;
-          height: 24px;
-          display: inline-block;
-        }
-      }
-    }
     .to-component {
       input {
         padding-left: 25px;
@@ -192,35 +178,27 @@
         }
       }
     }
-    &.basic {
-      .complete-form-only {
-        display: none !important;
-        visibility: hidden !important;
-      }
-    }
     &.complete {
       .basic-form-only {
         display: none !important;
         visibility: hidden !important;
       }
     }
-    .extra {
-      color: @fg-arv_plain-text-color;
-      text-align: right;
-      font-size: 12px;
-      white-space: nowrap;
-      position: absolute;
-      right: 10px;
-      bottom: 2px;
-      a.toggle-mode-link {
-        color: @fg-arv_plain-text-color;
-        text-decoration: underline;
-        cursor: pointer;
-      }
-    }
   }
-  
+    .right {
+    text-align: right;
+  }
+  .left {
+    text-align: left;
+  }
+  .map-control {
+    margin: 5px 10px !important;
+  }
   //------ Imports -------
   //···· Components ······
+  @import "components/datepicker.less";
+  @import "components/timepicker.less";
+  @import "components/combobox.less";
+  @import "components/criteria.less";
 
 }

@@ -1,0 +1,41 @@
+.fg-arv_criteria-component {
+  background: @fg-arv_plain-text-color;
+  position: relative;
+  display: table-cell;
+  .icon-box.clickable {
+    color: @fg-arv_action-color;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+  .btn {
+    width: 100%;
+    border: none;
+    background-color: @fg-arv_plain-text-color;
+    position: relative;
+  }
+  span.img {
+    border: none;
+    width: 25px;
+    height: 25px;
+    top: 2px;
+    display: inline-block;
+    margin-right: 5px;
+  }
+  .all {
+    background: url("@{fg-arv_images-dir}/all-mode.png") center no-repeat;
+    background-size: 25px 18px;
+  }
+  .car {
+    background: url("@{fg-arv_images-dir}/car-mode.png") center no-repeat;
+    background-size: 20px 20px;
+  }
+  .public {
+    background: url("@{fg-arv_images-dir}/bus-mode.png") center no-repeat;
+    background-size: 25px 25px;
+  }
+  .walking {
+    background: url("@{fg-arv_images-dir}/walk-mode.png") center no-repeat;
+    background-position-y: top;
+  }
+}

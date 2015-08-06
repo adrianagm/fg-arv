@@ -1,0 +1,33 @@
+.form {
+  .dropdown-menu {
+    max-height: 20em;
+    overflow-y: auto;
+  }
+  .dropdown-menu > li {
+    clear: both;
+    color: #939393;
+    display: block;
+    font-weight: normal;
+    line-height: 1.42857;
+    padding: 3px 20px !important;
+    white-space: nowrap;
+  }
+  .dropdown-menu > li > a {
+    color: @fg-arv_action-color;
+    padding: 0;
+    span {
+      vertical-align: middle;
+    }
+  }
+  .dropdown-menu > li > a:hover {
+    color: @fg-arv_form-bg;
+    background-color: @fg-arv_transparent;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  @media screen {
+    @media (max-width: @fg-arv_mobile-break-max) {
+      padding-left: 5px;
+    }
+  }
+}

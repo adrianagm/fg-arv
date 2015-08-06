@@ -32,7 +32,7 @@
           "<div class='col-xs-12 col-sm-5 form-component to-component'></div>" +
           "<div class='col-xs-12 col-sm-3 form-component complete-form-only fg-arv_date-component'></div>" +
           "<div class='xxs-screen col-xs-6 col-sm-3 form-component complete-form-only fg-arv_time-component' title='Time selector.'></div>" +
-          "<div class='col-xs-12 col-sm-2 form-component complete-form-only fg-arv_transport-component' title='Transport selector.'></div>" +
+          "<div class='col-xs-12 col-sm-2 form-component complete-form-only fg-arv_criteria-component' title='Criteria.'></div>" +
           "<div class='col-xs-12 col-sm-2 form-component go-component'>" +
           "<button type='button' class='form-control btn btn-primary go' title='Go with these options.'>" +
           "Go<span class='glyphicon glyphicon-menu-right' aria-hidden='true'></span>" +
