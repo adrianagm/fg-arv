@@ -98,7 +98,7 @@
 
       mapView.deleteRoute();
 
-      var from = 'Bristol';
+      var from = 'Reading';
       var to = 'Southampton';
 
       var opt = {

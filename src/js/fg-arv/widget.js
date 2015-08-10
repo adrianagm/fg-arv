@@ -23,6 +23,7 @@
 
         // ------- Options for Google Map -----------
         var mapOptions = {
+          center: new google.maps.LatLng(51.5008, 0.1247),
           zoom: 11,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           mapTypeControl: false,
@@ -163,17 +164,19 @@
           arrivalDirection: to
         };
 
-        googleHelper.getJourney(from, to, opt).done(function(response) {
-            jQuery.each(response, function(i, route) {
-              mapView.createComponent({
-                map: widget.getMap(),
-                route: route
+        if (from !== '' && to !== '') {
+          googleHelper.getJourney(from, to, opt).done(function(response) {
+              jQuery.each(response, function(i, route) {
+                mapView.createComponent({
+                  map: widget.getMap(),
+                  route: route
+                });
               });
+            })
+            .fail(function() {
+              //No routes
             });
-          })
-          .fail(function() {
-            //No routes
-          });
+        }
       };
 
 
