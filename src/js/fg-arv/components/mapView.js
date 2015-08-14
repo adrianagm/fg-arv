@@ -33,8 +33,16 @@
 
   define(['fg-arv/utils', 'fg-arv/google-helper'], function(utils, googleHelper) {
     var route = [];
+    /** START - ONLY FOR TESTING SPRINT 1 **/
+    var routeSelected;
+    /** END - ONLY FOR TESTING SPRINT 1 **/
     var module = {
       createComponent: function(config) {
+        /** START - ONLY FOR TESTING SPRINT 1 **/
+        if (routeSelected) {
+          routeSelected.setMap(null);
+        }
+        /** END - ONLY FOR TESTING SPRINT 1 **/
         module.drawRoute(config);
       },
       drawRoute: function(config) {
@@ -43,7 +51,10 @@
         for (var s = 0; s < steps.length; s++) {
           var step = new google.maps.Polyline({
             map: config.map,
-            path: steps[s].path
+            path: steps[s].path,
+            /** START - ONLY FOR TESTING SPRINT 1 **/
+            globalPath: path
+              /** END - ONLY FOR TESTING SPRINT 1 **/
           });
           step.setOptions(STYLES[steps[s].travel_mode]);
           if (steps[s].transit) {
@@ -54,6 +65,27 @@
             }
           }
 
+          /** START - ONLY FOR TESTING SPRINT 1 **/
+          google.maps.event.addListener(step, 'click', function(h) {
+            if (routeSelected) {
+              routeSelected.setMap(null);
+            }
+            var optionsLine = {
+              strokeColor: 'red',
+              strokeOpacity: 1.0,
+              strokeWeight: 7,
+              editable: false,
+              geodesic: true,
+              zIndex: 1000
+            };
+            routeSelected = new google.maps.Polyline({
+              map: config.map,
+              path: step.globalPath
+            });
+            routeSelected.setOptions(optionsLine);
+          });
+
+          /** END - ONLY FOR TESTING SPRINT 1 **/
           route.push(step);
         }
         var bounds = config.route.bounds;

@@ -42,8 +42,8 @@
 
       mapView.deleteRoute();
 
-      var from = 'London';
-      var to = 'Swindon';
+      var from = 'Lancaster Gate, London';
+      var to = 'Bristol';
 
       var opt = {
         departureTime: date,
