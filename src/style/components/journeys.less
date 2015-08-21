@@ -1,0 +1,336 @@
+.fg-arv_info-journey-component {
+    z-index: 2;
+    padding: 0;
+    display: block;
+    top: 5px !important;
+    .info-journey-panel {
+        border: none;
+        margin-bottom: 0;
+        padding-left: 0;
+        padding-right: 0;
+        background-color: @fg-arv_transparent;
+        .close-panel {
+            position: absolute;
+            left: -10px;
+            color: @fg-arv_main-color;
+            font-weight: bold;
+        }
+    }
+    .collapse-route {
+        opacity: 0.8;
+        background-color: #f1f1f1;
+    }
+    .collapse-route:hover {
+        opacity: 1;
+        cursor: pointer;
+    }
+    .panel-body {
+        //background-color: @fg-arv_plain-text-color;
+    }
+    .panel-heading {
+        padding: 3px 10px;
+        margin: 0;
+        background-color: @fg-arv_form-bg;
+        //color: @fg-arv_plain-text-color;
+        .head-direction {
+            display: inline-block;
+            padding-top: 5px;
+            .dash {
+                padding: 0;
+            }
+            &.ellipsis {
+                padding-right: 0;
+            }
+        }
+        .message {
+            padding-top: 5px;
+        }
+    }
+    .journeys-separated {
+        height: 6px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        //border-bottom: solid 1px #d6d6d6;
+        background-color: rgba(0, 0, 0, 0);
+    }
+    .walking-sm {
+        width: 15px;
+        height: 15px;
+        background: url("@{fg-arv_images-dir}/walk-mode.png") center no-repeat;
+        background-size: 15px 15px;
+        display: inline-block;
+    }
+    .panel-body {
+        padding: 0;
+        .second-text {
+            color: #aaa;
+            font-size: 10px;
+        }
+    }
+    .row {
+        padding: 5px 25px;
+        div:not(.alert) {
+            padding: 3px 15px;
+        }
+    }
+    .ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .wrap {
+        white-space: normal !important;
+    }
+    .row-head {
+        font-size: 16px;
+    }
+    .row-transbord {
+        line-height: 25px;
+        img {
+            width: 25px;
+            height: 25px;
+            opacity: 0.8;
+            margin-top: -5px;
+        }
+        span {
+            padding: 2px 5px;
+        }
+    }
+    .row-departure {
+        color: #aaa;
+    }
+    .row-foot {
+        .additional-info {
+            margin: 5px 0;
+            color: #bbb;
+            @media screen {
+                @media (max-width: @fg-arv_mobile-break-max) {
+                    padding: 0 0 0 15px;
+                    font-size: 13px;
+                }
+            }
+            span {
+                opacity: 0.6;
+            }
+        }
+    }
+    .panel-journey-buttons {
+        .info-journey-button {
+            margin: 0 10px 2px;
+            border: none;
+            color: @fg-arv_main-color;
+        }
+    }
+    .panel-route {
+        background-color: @fg-arv_plain-text-color;
+        .route-info-panel {
+            border-left: 15px solid @fg-arv_middle-gray;
+        }
+        .route-info-panel:hover {
+            border-left-color: @fg-arv_main-color;
+        }
+        .distance-info {
+            color: @fg-arv_middle-gray;
+            font-size: 12px;
+        }
+        .steps-container {
+            padding: 0 !important;
+        }
+        .duration {
+            color: @fg-arv_main-color;
+            font-size: 14px;
+        }
+        .duration,
+        .panel-journey-buttons {
+            @media screen {
+                @media (max-width: @fg-arv_mobile-break-max) {
+                    padding: 0 4px;
+                }
+            }
+        }
+    }
+    .steps-panel {
+        padding: 10px 0;
+        margin-bottom: 0;
+        overflow-y: overlay;
+        overflow-x: hidden;
+        background-color: #f1f1f1;
+        @media screen {
+            @media (max-width: @fg-arv_mobile-break-max) {
+                overflow: hidden;
+            }
+        }
+        .time-info {
+            .step-icon {
+                position: relative;
+                top: 20px;
+            }
+            .step-time {
+                width: 70px;
+            }
+            .icon-turn.turn-left {
+                width: 15px;
+                height: 15px;
+                background: url("https://cdn1.iconfinder.com/data/icons/maps-and-locations/16/turn_left-512.png") center no-repeat;
+                background-size: 10px 12px;
+                display: inline-block;
+            }
+            .icon-turn.turn-right {
+                width: 15px;
+                height: 15px;
+                background: url("https://cdn1.iconfinder.com/data/icons/maps-and-locations/16/turn_right-512.png") center no-repeat;
+                background-size: 10px 12px;
+                display: inline-block;
+            }
+            .icon-turn.turn-slight-right {
+                width: 15px;
+                height: 15px;
+                background: url("images/ArrowRight.png") center no-repeat;
+                display: inline-block;
+            }
+            .icon-turn.turn-slight-left {
+                width: 15px;
+                height: 15px;
+                background: url("images/ArrowLeft.png") center no-repeat;
+                display: inline-block;
+            }
+            .icon-turn {
+                width: 15px;
+                height: 15px;
+                background: url("images/ArrowUp.png") center no-repeat;
+                display: inline-block;
+            }
+        }
+        .stepByStep-panel {
+            margin-bottom: 0 !important;
+        }
+        .row {
+            padding-top: 0;
+            padding-bottom: 0;
+            width: 100%;
+            .step-info {
+                top: -15px;
+            }
+            .step-squema {
+                display: table;
+                background-color: #f1f1f1;
+            }
+            [class*="col-"] {
+                float: none;
+                display: table-cell;
+                vertical-align: top;
+            }
+            .step-detail {
+                border-bottom: 1px solid #c6c6c6;
+                padding-left: 0;
+                padding-right: 0;
+                .step-instruction {
+                    padding-right: 0;
+                    padding-left: 0;
+                    margin-right: 0;
+                    margin-left: 0;
+                    .instructions {
+                        padding-right: 0;
+                        padding-left: 0;
+                    }
+                    .button-book {
+                        padding-right: 0;
+                        .btn {
+                            border: none;
+                            color: @fg-arv_dark-gray;
+                        }
+                    }
+                }
+            }
+            .step-detail.one-mode {
+                border-bottom: none;
+            }
+            .stop-end {
+                border: none;
+                text-align: left;
+                padding-left: 5px;
+            }
+            .stop-departure {
+                font-size: larger;
+                padding-left: 0;
+                padding-right: 0;
+            }
+            .step-description {
+                color: #999;
+                padding: 15px 0;
+            }
+            img {
+                width: 15px;
+                height: 15px;
+            }
+            .step-instruction {
+                span {
+                    padding: 2px 5px;
+                }
+                .instructions {
+                    padding: 0 4px;
+                }
+            }
+            .transit-stop-circle {
+                position: relative;
+                width: 12px;
+                height: 12px;
+                left: -3px;
+                top: 1px;
+                -moz-border-radius: 50%;
+                -webkit-border-radius: 50%;
+                border-radius: 50%;
+                border: 2px solid black;
+                background-color: white;
+                padding: 0;
+            }
+            .stop-circle-end {
+                left: 0;
+            }
+            .step-line {
+                padding: 5px 3px;
+                width: 6px;
+                top: 2px;
+                left: -1px;
+            }
+            .walk-line {
+                background: url("http://upload.wikimedia.org/wikipedia/commons/d/d4/WX_circle_lightblue.png") center repeat-y;
+                background-size: 6px 6px;
+                background-repeat: space;
+                padding: 4px;
+            }
+        }
+        .bold {
+            font-weight: bold;
+        }
+    }
+    /* .info-journey-steps:after {
+        content: "";
+        position: relative;
+        top: 18px;
+        left: 78px;
+        z-index: 2;
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-top: 18px solid #fff;
+    }*/
+    .info-journey-steps {
+        background-color: @fg-arv_plain-text-color;
+        position: relative;
+    }
+    @media screen {
+        @media (max-width: @fg-arv_mobile-break-max) {
+            width: 95%;
+            left: 5px !important;
+            top: 5px !important;
+        }
+    }
+    .btn {
+        @media screen {
+            @media (max-width: @fg-arv_mobile-break-max) {
+                padding: 6px 9px;
+            }
+        }
+    }
+}

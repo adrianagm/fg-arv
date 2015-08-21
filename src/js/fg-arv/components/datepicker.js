@@ -120,7 +120,7 @@
 
     function createTemplate(config) {
 
-      return "<div id='" + config.id + "' class='date-picker-box rounded'>" +
+      return "<div id='" + config.id + "' class='form-input date-picker-box rounded'>" +
 
         "<div class='icon-box date'></div>" +
         "<div class='date-selector-box'>" +

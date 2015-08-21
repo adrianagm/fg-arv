@@ -32,7 +32,7 @@
           var componentElement = jQuery('#' + id);
           var icon = document.createElement('div');
           icon.className = config.classFromTo + ' marker-icon input-icon';
-          icon.innerHTML += config.classFromTo === 'from' ? 'F' : 'T';
+
           container.prepend(icon);
           var component;
 
@@ -150,7 +150,7 @@
     function createTemplate(config) {
       var template = "";
       template +=
-        "<input id='" + config.id + "' type='text' placeholder='" + config.placeholder + "' class='form-control " + config.classFromTo + " location-input' title='" + config.title + "'>";
+        "<input id='" + config.id + "' type='text' placeholder='" + config.placeholder + "' class='form-control " + config.classFromTo + " location-input form-input' title='" + config.title + "'>";
 
       return template;
     }

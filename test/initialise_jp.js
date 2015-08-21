@@ -19,7 +19,7 @@ function initialise_jp() {
       getInitialFormValues: function() {
         return {
           from: 'London',
-          to: 'Swansea',
+          to: 'Birminghan',
           date: new Date(),
           time: '18:00'
         }; // For testing.

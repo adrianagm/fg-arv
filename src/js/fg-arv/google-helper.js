@@ -36,6 +36,7 @@
           directionsRequest.travelMode = TRAVELMODE.transit;
           directionsRequest.provideRouteAlternatives = true;
           directionsRequest.region = 'uk';
+          directionsRequest.unitSystem = google.maps.UnitSystem.IMPERIAL;
         }
         // Optional parameters
         if (options) {

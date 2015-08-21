@@ -2,8 +2,10 @@
 
   "use strict";
 
-  define(['fg-arv/constants', 'fg-arv/utils', 'fg-arv/templates', 'fg-arv/components/locationInput', 'fg-arv/components/datepicker', 'fg-arv/components/time', 'fg-arv/components/combobox', 'fg-arv/google-helper', 'fg-arv/components/mapView'],
-    function(constants, utils, tmpl, locationInput, datepicker, time, combobox, googleHelper, mapView) {
+  define(['fg-arv/constants', 'fg-arv/utils', 'fg-arv/templates', 'fg-arv/components/locationInput', 'fg-arv/components/datepicker',
+      'fg-arv/components/time', 'fg-arv/components/combobox', 'fg-arv/google-helper', 'fg-arv/components/mapView', 'fg-arv/components/journeys'
+    ],
+    function(constants, utils, tmpl, locationInput, datepicker, time, combobox, googleHelper, mapView, journeys) {
 
       var mapInstance;
 
@@ -42,11 +44,9 @@
         mapInstance = this.map;
         rootElement.find(".form").addClass('complete');
 
-        var widget = this;
-
         var formControl = rootElement.find(".form")[0];
         jQuery(formControl).addClass('map-control');
-        //this.map.controls[google.maps.ControlPosition.LEFT_TOP].push(formControl);
+        this.map.controls[google.maps.ControlPosition.LEFT_TOP].push(formControl);
 
         google.maps.event.addListenerOnce(this.map, 'idle', function() {
           //rootElement.find('.map-control').show();
@@ -102,7 +102,7 @@
           }
         });
 
-        this.criteriaComponent = combobox.createComponent({
+        /*this.criteriaComponent = combobox.createComponent({
           container: rootElement.find(".fg-arv_criteria-component"),
           type: "codedValues",
           options: [{
@@ -115,7 +115,7 @@
             text: "Less walking",
             travelMode: ''
           }]
-        });
+        });*/
 
         var eventBus = utils.createEventBus();
 
@@ -165,18 +165,41 @@
         };
 
         if (from !== '' && to !== '') {
+          getJourney(from, to, opt);
+        }
+
+        function getJourney(from, to, opt) {
+
           googleHelper.getJourney(from, to, opt).done(function(response) {
-              jQuery.each(response, function(i, route) {
-                mapView.createComponent({
-                  map: widget.getMap(),
-                  route: route
-                });
+            jQuery.each(response, function(i, route) {
+              mapView.createComponent({
+                map: widget.getMap(),
+                route: route
               });
-            })
+            });
+            journeys.createComponent({
+              container: rootElement.find(
+                '.fg-arv_info-journey-component'
+              )[0],
+              routes: response,
+              widget: widget,
+              departureTime: opt.departureTime ?
+                opt.departureTime : false,
+              arrivalTime: opt.arrivalTime ?
+                opt.arrivalTime : false,
+              departureDirection: opt
+                .departureDirection,
+              arrivalDirection: opt.arrivalDirection,
+              message: 'Ooops! We are having problems with the route for improvement works. We estimate will be resolved in four days'
+            });
+          })
             .fail(function() {
               //No routes
             });
+
         }
+
+
       };
 
 
@@ -207,6 +230,7 @@
           }
           // TODO Reinitialise the widget
         },
+
         close: function() {
           // TODO Free any resource and close.
         },

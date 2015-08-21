@@ -138,8 +138,8 @@
     //*********************************************************
 
     function createTemplate(config) {
-      return "<div id='" + config.id + "-hour' class='col-xs-7 col-sm-7 main-dropdown form-subcomponent dropdown time-picker'  title='Hour selector.'></div>" +
-        "<div id='" + config.id + "-minutes' class='col-xs-5 col-sm-5 second-dropdown form-subcomponent dropdown time-picker'  title='Minutes selector.'></div>";
+      return "<div id='" + config.id + "-hour' class='col-xs-7 col-sm-7 main-dropdown form-subcomponent form-input dropdown time-picker'  title='Hour selector.'></div>" +
+        "<div id='" + config.id + "-minutes' class='col-xs-5 col-sm-5 second-dropdown form-subcomponent form-input dropdown time-picker'  title='Minutes selector.'></div>";
     }
 
     function createDomID() {
