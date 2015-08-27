@@ -39,8 +39,8 @@
 
           container.innerHTML = template;
           var componentElement = jQuery('#' + id);
-          componentElement.find('.leave-arrive-btn').append(createLeaveArriveButton());
-          componentElement.find('.sort-btn').append(createSortButton());
+          componentElement.find('.leave-arrive').prepend(createLeaveArriveButton());
+          componentElement.find('.sort').append(createSortButton());
           var journeyPanels = [];
           var listRoutes = conf.routes;
           var openJourney = 0;
@@ -190,11 +190,14 @@
         "<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>" +
         "{{message}}</div>{{/message}}" +
         "<div class='panel-form row'>" +
-        "<div class='col-xs-6 leave-arrive-btn'>" +
-        "{{{leaveArriveBtn}}}" +
+        "<div class='col-xs-6  choose-opt  row'>" +
+        "<div class='leave-arrive col-xs-12'>" +
+        "<input type='text' class='col-xs-5' placeholder='hh:mm'>" +
+        "</div>" +
         " </div>" +
-        "<div class='col-xs-6 sort-btn'>" +
-        "Sort by </div>" +
+        "<div class='col-xs-6 sort choose-opt  row'>" +
+        "<span  class='col-xs-5'>Sort by </span>" +
+        "</div>" +
         "</div>" +
         // "<div class='{{#message}}col-xs-10{{/message}} message left'>{{message}}</div>" +
         // "{{#departureDirection}}<div class='head-info col-xs-11 row'><div class='head-direction col-xs-7 row'><div class='ellipsis col-xs-11' title='{{departureDirection}}'>{{departureDirection}}</div><div class='col-xs-1 dash'>-</div></div>" +
@@ -251,9 +254,10 @@
         value: 'arriveTime'
       }];
       var callback = function(btn) {
-        alert(btn.value);
+        // alert(btn.value);
       };
       var btn = createOptButton(opt, callback);
+
       return btn;
 
     }
@@ -266,23 +270,29 @@
         text: 'Fewer transfers',
         value: 'fewer'
       }, {
-        text: 'less walking',
+        text: 'Less walking',
         value: 'less'
       }];
       var callback = function(btn) {
-        alert(btn.value);
+        // alert(btn.value);
       };
       var btn = createOptButton(opt, callback);
+
       return btn;
     }
 
     function createOptButton(opt, callback) {
+      var div = document.createElement('div');
+      div.className = 'col-xs-7 row ';
       var btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'btn btn-default';
+      btn.className = 'btn btn-default btn-sm btn-opt col-xs-8';
       var i = 0;
       btn.innerHTML = opt[i].text;
       btn.value = opt[i].value;
+      var upDownBtn = document.createElement('button');
+      upDownBtn.type = 'button';
+      upDownBtn.className = 'btn btn-default btn-sm col-xs-4';
       var span = document.createElement('span');
       var up = document.createElement('a');
       up.className = 'zmdi zmdi-caret-up';
@@ -294,7 +304,8 @@
 
         btn.innerHTML = opt[i].text;
         btn.value = opt[i].value;
-        btn.appendChild(span);
+
+        callback(btn);
       };
       var down = document.createElement('a');
       down.className = 'zmdi zmdi-caret-down';
@@ -306,15 +317,16 @@
 
         btn.innerHTML = opt[i].text;
         btn.value = opt[i].value;
-        btn.appendChild(span);
+
+        callback(btn);
       };
       span.appendChild(up);
       span.appendChild(down);
-      btn.appendChild(span);
-      btn.onclick = function() {
-        callback(btn);
-      };
-      return btn;
+      upDownBtn.appendChild(span);
+      div.appendChild(btn);
+      div.appendChild(upDownBtn);
+
+      return div;
 
 
 

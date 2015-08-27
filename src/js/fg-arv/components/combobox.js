@@ -59,9 +59,11 @@
                 case 'codedValues':
                   for (var i = 0; i < config.options.length; i++) {
                     value = config.options[i];
-                    if (utils.isPropertyDefined(value, 'text')) {
-                      dropdownContent += "<li><a href='#' role='menuitem'><span class='img " + value.text.split(' ')[0].toLowerCase() + "'></span><span class='combo-value'>" + value.text + "</span></a></li>";
+                    if (utils.isPropertyDefined(value, 'textIcon')) {
+                      dropdownContent += "<li><a href='#' role='menuitem'><span class='img " + value.textIcon.split(' ')[0].toLowerCase() + "'></span><span class='combo-value'>" + value.textIcon + "</span></a></li>";
 
+                    } else if (utils.isPropertyDefined(value, 'text')) {
+                      dropdownContent += "<li><a href='#' role='menuitem'><span class='combo-value'>" + value.text + "</span></a></li>";
                     } else {
                       dropdownContent += "<li><a href='#' role='menuitem'><span class='combo-value'>" + value + "</span></a></li>";
                     }
@@ -122,7 +124,7 @@
     //*********************************************************
 
     function createTemplate(config) {
-      return "<div class='dropdown'><button id='btn-" + config.id + "' class='btn  dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false'>" +
+      return "<div class='dropdown form-input'><button id='btn-" + config.id + "' class='btn  dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false'>" +
         "<div class='icon-box icon'></div>" +
         "<span class='dropdownLabel'></span>" +
         "<div class='icon-box clickable'>" +
