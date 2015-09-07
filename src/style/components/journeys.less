@@ -93,6 +93,23 @@
             color: #aaa;
             font-size: 10px;
         }
+        .id-route {
+            width: 25px;
+            height: 25px;
+            border: 13px solid #48b5e9;
+            border-radius: 13px;
+            box-shadow: 0 0 5px #399089;
+            margin: 3px;
+            position: absolute;
+            top: -2px;
+            padding: 0!important;
+            color:@fg-arv_main-color;
+            span {
+                position: absolute;
+                top: -10px;
+                left: -4px;
+            }
+        }
     }
     .row {
         padding: 5px 25px;
@@ -176,8 +193,8 @@
     .panel-route.selected .route-info-panel {
         border-left-color: @fg-arv_main-color;
     }
-    .panel-route.focused:not(.selected) .route-info-panel{
-      border-left: 15px solid @fg-arv_dark-gray;
+    .panel-route.focused:not(.selected) .route-info-panel {
+        border-left: 15px solid @fg-arv_dark-gray;
     }
     .steps-panel {
         padding: 10px 0;

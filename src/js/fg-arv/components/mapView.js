@@ -31,9 +31,10 @@
     }
   };
 
-  define(['fg-arv/utils', 'fg-arv/google-helper', 'fg-arv/components/journeys'], function(utils, googleHelper, journeys) {
+  define(['fg-arv/utils', 'fg-arv/google-helper', 'fg-arv/components/journeys', 'fg-arv/libs/mustache'], function(utils, googleHelper, journeys, Mustache) {
     var _routes = [],
       routeSelected = [],
+      infowindows = [],
       routes,
       map;
 
@@ -132,8 +133,12 @@
               _routes[i].setMap(null);
               if (JSON.stringify(_routes[i].getPath().getArray()) === JSON.stringify(route.overview_path)) {
                 component.drawSelectedRoute(route);
+                _routes[i].selected = true;
+                component.openInfowindow(route, i, config, true);
+
               } else {
                 _routes[i].setMap(map);
+                component.openInfowindow(routes[i], i, config);
               }
 
             }
@@ -145,11 +150,18 @@
                   strokeColor: '#616161',
                   zIndex: 900
                 });
+                component.openInfowindow(route, i, config, false, true);
               } else {
                 _routes[i].setOptions({
                   strokeColor: '#939393',
                   zIndex: 500
                 });
+                if (!_routes[i].selected) {
+                  component.openInfowindow(routes[i], i, config, false, false);
+                }
+              }
+              if (_routes[i].selected) {
+                component.openInfowindow(routes[i], i, config, true, false);
               }
 
             }
@@ -160,6 +172,11 @@
                 strokeColor: '#939393',
                 zIndex: 500
               });
+              if (!_routes[i].selected) {
+                component.openInfowindow(routes[i], i, config, false, false);
+              } else {
+                component.openInfowindow(routes[i], i, config, true, false);
+              }
             }
 
           },
@@ -170,6 +187,45 @@
             for (var i in _routes) {
               component.deleteSimpleRoute(_routes[i]);
             }
+          },
+
+          openInfowindow: function(route, index, conf, selected, focused) {
+            var data = {
+              index: parseInt(index) + 1,
+              duration: route.legs[0].duration.text,
+              selected: selected,
+              focused: focused,
+              color: conf.colors[index]
+            };
+            if (!infowindows[index]) {
+              var arr = route.overview_path;
+              var middle = arr[Math.floor(arr.length / 2)];
+
+              for (var i in infowindows) {
+                if (middle.equals(infowindows[i].getPosition())) {
+                  middle = arr[Math.floor(arr.length / 3)];
+                }
+              }
+
+              infowindows[index] = new google.maps.InfoWindow();
+              infowindows[index].setPosition(middle);
+              infowindows[index].setOptions({
+                pixelOffset: new google.maps.Size(0, 10)
+              });
+
+              infowindowlisteners(infowindows[index]);
+
+
+            }
+            var templateRendered = Mustache.render(createInfoWindowTemplate(), data);
+            infowindows[index].setContent(templateRendered);
+            if (selected) {
+              infowindows[index].setZIndex(200);
+            } else {
+              infowindows[index].setZIndex(100);
+            }
+
+            infowindows[index].open(conf.map);
           }
         };
         component.init(routes);
@@ -188,6 +244,82 @@
     function createDomID() {
       var i = ++ID;
       return "fg-arv-map-view-journey-" + i;
+    }
+
+    function createInfoWindowTemplate() {
+      return "<div class='infowindow {{#selected}}selected{{/selected}} {{#focused}}focused{{/focused}}' >" +
+        "<div class='row row-head'>" +
+        "<div class='col-xs-2 left id-route' style='border-color:{{color}}'><span>{{index}}</span></div>" +
+        "<div class='col-xs-10 distance-duration right'>{{duration}}</div>" +
+        "</div>" +
+
+        "</div>";
+    }
+
+    function infowindowlisteners(infowindow) {
+      //css
+      google.maps.event.addListener(infowindow, 'domready', function() {
+
+        var iwOuter = jQuery('.gm-style-iw');
+        iwOuter.css({
+          'background-color': 'rgba(230, 230, 230, 0.9)'
+        });
+
+        var iwBackground = iwOuter.prev();
+
+        // Remove the background shadow DIV
+        iwBackground.children(':nth-child(2)').css({
+          'display': 'none'
+        });
+
+        // Remove the white background DIV
+        iwBackground.children(':nth-child(4)').css({
+          'display': 'none'
+        });
+        iwBackground.children(':nth-child(3)').find('div').children().css({
+          'z-index': '1',
+          'width': '10px',
+          'background-color': 'rgba(230, 230, 230, 0.9)',
+
+        });
+
+        var arrows = iwBackground.children(':nth-child(3)').find('div').children();
+        for (var i = 0; i < arrows.length; i++) {
+          if (arrows[i].style.transform === 'skewX(22.6deg)') {
+            arrows[i].style.transform = 'skewX(35.6deg)';
+            arrows[i].style['border-left'] = '1px solid rgba(72, 181, 233, 0.6)';
+          } else if (arrows[i].style.transform === 'skewX(-22.6deg)') {
+            arrows[i].style.transform = 'skewX(-35.6deg)';
+            arrows[i].style['border-right'] = '1px solid rgba(72, 181, 233, 0.6)';
+          }
+        }
+        var iwOuterselected = jQuery('.infowindow.selected').parent().parent().parent();
+        if (iwOuterselected) {
+          iwOuterselected.css({
+            'background-color': 'rgba(255, 255, 255, 1)'
+          });
+          var iwBackgroundSelected = iwOuterselected.prev();
+          iwBackgroundSelected.children(':nth-child(3)').find('div').children().css({
+            'background-color': 'rgba(255, 255, 255, 1)',
+
+          });
+        }
+
+        var iwOuterfocused = jQuery('.infowindow.focused').parent().parent().parent();
+        if (iwOuterfocused) {
+          iwOuterfocused.css({
+            'background-color': 'rgba(210, 210, 210, 1)'
+          });
+          var iwBackgroundfocused = iwOuterfocused.prev();
+          iwBackgroundfocused.children(':nth-child(3)').find('div').children().css({
+            'background-color': 'rgba(210, 210, 210, 1)',
+
+          });
+        }
+
+      });
+
+
     }
 
   });

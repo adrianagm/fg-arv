@@ -12,6 +12,7 @@
     showPanels: jQuery.noop
   };
 
+
   var ID = 0;
 
   define(['fg-arv/utils', 'fg-arv/components/stepByStep', 'fg-arv/libs/mustache'], function(utils, stepByStep, Mustache) {
@@ -127,6 +128,8 @@
         var route = conf.route.legs[0];
         var time = getInfoRouteGMTTime(conf);
         var infoRoute = {
+          index: conf.index + 1,
+          color: conf.color,
           summary: conf.route.summary,
           duration: route.duration ? route.duration.text : '',
           distance: route.distance ? route.distance.text : '',
@@ -258,7 +261,8 @@
     function createTemplate(config) {
 
       return "<div class='route-info-panel'><div class='row row-head'>" +
-        "<div class='right col-xs-12 duration'>{{duration}} / {{distance}}</div>" +
+        "<div class='col-xs-2'><div class='id-route' style='border-color:{{color}}'><span>{{index}}</span></div></div>" +
+        "<div class='right col-xs-10 duration'>{{duration}} / {{distance}}</div>" +
         "</div>" +
         "<div class='row row-transbord wrap'><div class='col-xs-12 wrap'>" +
         "{{#onlyOneMode}}<img src={{transbords.0.icon}}>  {{summary}} {{/onlyOneMode}}" +
