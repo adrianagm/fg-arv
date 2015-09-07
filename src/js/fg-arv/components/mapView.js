@@ -47,7 +47,6 @@
           init: function(routes) {
             for (var i in routes) {
               component.drawSimpleRoute(routes[i]);
-
             }
           },
           drawSimpleRoute: function(route) {
@@ -86,7 +85,7 @@
                 path: steps[s].path,
                 /** START - ONLY FOR TESTING SPRINT 1 **/
                 globalPath: path
-                /** END - ONLY FOR TESTING SPRINT 1 **/
+                  /** END - ONLY FOR TESTING SPRINT 1 **/
               });
               step.setOptions(STYLES[steps[s].travel_mode]);
               step.setOptions({
@@ -107,6 +106,8 @@
             }
             var bounds = route.bounds;
             map.fitBounds(bounds);
+            //Move map center 200 pixels right
+            map.panBy(-200, 0);
           },
 
           deleteSelectedRoute: function() {
