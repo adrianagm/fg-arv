@@ -171,11 +171,9 @@
         function getJourney(from, to, opt) {
 
           googleHelper.getJourney(from, to, opt).done(function(response) {
-            jQuery.each(response, function(i, route) {
-              mapView.createComponent({
-                map: widget.getMap(),
-                route: route
-              });
+            var mapViewComponent = mapView.createComponent({
+              map: widget.getMap(),
+              routes: response
             });
             journeys.createComponent({
               container: rootElement.find(
@@ -190,6 +188,7 @@
               departureDirection: opt
                 .departureDirection,
               arrivalDirection: opt.arrivalDirection,
+              mapViewComponent: mapViewComponent,
               message: 'Ooops! We are having problems with the route for improvement works. We estimate will be resolved in four days'
             });
           })

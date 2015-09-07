@@ -14,18 +14,20 @@
 
   var ID = 0;
 
-  define(['fg-arv/utils', 'fg-arv/components/mapView', 'fg-arv/components/stepByStep', 'fg-arv/libs/mustache'], function(utils, mapView, stepByStep, Mustache) {
+  define(['fg-arv/utils', 'fg-arv/components/stepByStep', 'fg-arv/libs/mustache'], function(utils, stepByStep, Mustache) {
 
     var module = {
       createComponent: function(config) {
         var that = this;
+        var mapView = config.mapView;
         var container = utils.getPropertyValue(config, 'container');
         if (container) {
           var id = createDomID();
           var conf = jQuery.extend({
             id: id
           }, DEFAULT_CONFIG, config);
-          var template = "<div id='" + id + "' class='panel-route'></div>",
+
+          var template = "<div id='" + id + "' class='panel-route '></div>",
             component, templateCollapse, templateExpand, dataInfoJourney;
 
           container.append(template);
@@ -38,31 +40,19 @@
             getData: function() {
               return dataInfoJourney;
             },
-            hide: function() {
-              componentElement.hide();
+            getRoute: function() {
+              return conf.route;
             },
-            show: function() {
-              componentElement.show();
-            },
-            collapse: function() {
-              componentElement.addClass('collapse-route');
-              componentElement.removeClass('expand-route');
-              componentElement.html(templateCollapse);
-              componentElement.click(function() {
-                conf.isCollapse = false;
-                conf.collapseAllPanels();
-                component.expand();
-              });
-            },
+
             expand: function() {
               componentElement.removeClass('collapse-route');
               componentElement.addClass('expand-route');
               componentElement.html(templateExpand);
-
+              component.focusOnRouteListen();
+              component.clickOnRouteListen();
               componentElement.find('.stepByStep-button').click(function() {
 
-                //conf.hidePanel();
-                //conf.recalculateSize();
+
                 if (jQuery(this).hasClass('open')) {
                   componentElement.find('.stepByStep-button').removeClass('open');
                   componentElement.find('.stepByStep-button').addClass('zmdi-caret-down');
@@ -78,15 +68,8 @@
                     widget: conf.widget,
                     route: conf.route,
                     template: templateExpand,
-                    data: component.getData(),
-                    backCallback: function() {
-                      conf.showPanel();
-                    },
+                    data: component.getData()
 
-                    closePanel: function() {
-                      conf.hidePanel();
-                      config.widget.widgetElement.find('.form').css('display', 'block');
-                    }
                   });
                 }
 
@@ -94,20 +77,43 @@
 
 
 
+            },
+            focusOnRouteListen: function() {
+              componentElement.hover(function() {
+                component.focusOnRoute();
+              });
+              componentElement.mouseleave(function() {
+                component.leaveRoute();
+              });
+            },
+
+            focusOnRoute: function() {
+              componentElement.addClass('focused');
+              mapView.focusOnRoute(conf.route);
+            },
+
+            leaveRoute: function() {
+              componentElement.removeClass('focused');
+              mapView.leaveRoute(conf.route);
+            },
+
+            clickOnRouteListen: function() {
+              componentElement.click(function() {
+                conf.clickCallback();
+                component.clickOnRoute();
+              });
+            },
+            clickOnRoute: function() {
+              componentElement.addClass('selected');
+              mapView.selectRoute(conf.route);
             }
 
           };
 
           module.getInfoRoute(conf).done(function(data) {
             dataInfoJourney = data;
-            templateCollapse = Mustache.render(createCollapseTemplate(conf), dataInfoJourney);
             templateExpand = Mustache.render(createTemplate(conf), dataInfoJourney);
-
-            if (conf.isCollapse) {
-              component.collapse();
-            } else {
-              component.expand();
-            }
+            component.expand();
 
           });
           return component;
@@ -115,47 +121,8 @@
       },
 
 
-      getJourneyData: function(step) {
-        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        return {
-          OutwardDate: step.transit.departure_time.value.getDate() + '/' + step.transit.departure_time.value.getMonth() +
-            '/' + step.transit.departure_time.value.getFullYear(),
-          OutwardTime: step.transit.departure_time.value.getHours() + ':' + step.transit.departure_time.value
-            .getMinutes(),
-          Origin: step.departure_station.station,
-          OriginStationCode: step.departure_station.code,
-          Destination: step.arrival_station.station,
-          DestinationStationCode: step.arrival_station.code,
-          DateTimeStamp: step.transit.departure_time.value.getTime(),
-          DayOfWeek: days[step.transit.departure_time.value.getDay()],
-          OutwardDayOfWeek: days[step.departure_time.getDay()],
-          TimeStamp: step.departure_time.getHours() + ':' + step.departure_time.getMinutes() + ':' + step.departure_time
-            .getSeconds()
-        };
-      },
-
-
-      createTemplate: function(conf, template) {
-        var contentTemplate;
-        if (conf.isCollapse) {
-          jQuery(template).addClass('collapse-route');
-          jQuery(template).removeClass('expand-route');
-          contentTemplate = createCollapseTemplate(conf);
-
-        } else {
-          jQuery(template).removeClass('collapse-route');
-          jQuery(template).addClass('expand-route');
-          contentTemplate = createTemplate(conf);
-        }
-        var dataInfoJourney = module.getInfoRoute(conf.route.legs[0]);
-        var templateRendered = Mustache.render(contentTemplate, dataInfoJourney);
-        return jQuery(template).html(templateRendered);
-
-      },
-
       //prepare data for Mustache template
       getInfoRoute: function(conf) {
-        var deferreds = [];
         var deferredData = new jQuery.Deferred();
         var route = conf.route.legs[0];
         var time = getInfoRouteGMTTime(conf);
@@ -206,7 +173,7 @@
               transbord.maneuver = step.maneuver;
               walking_time += step.duration.value;
               nStepsWalking++;
-              //infoRoute.end_address =
+
               break;
             case 'TRANSIT':
               var startTimeOffset = getTimeOffset(step.transit.departure_time.value, step.transit.departure_time
@@ -229,16 +196,13 @@
               arrival_station = step.transit.arrival_stop ? step.transit.arrival_stop.name : '';
               transbord.mode = step.transit.line.vehicle.type;
 
-
-
               transbord.line = step.transit.line.short_name;
               transbord.color = step.transit.line.color ? step.transit.line.color : '#c00';
               transbord.text_color = step.transit.line.text_color ? step.transit.line.text_color : '#ccc';
               transbord.agency = step.transit.line.agencies[0].name;
-              //transbord.icon = step.transit.line.vehicle.local_icon ? step.transit.line.vehicle.local_icon :
-              //step.transit.line.vehicle.icon;
               transbord.icon = step.transit.line.vehicle.icon ? step.transit.line.vehicle.icon :
                 step.transit.line.vehicle.icon;
+
               //error in the london bus icon url provided by google
               if (transbord.icon.search('uk-london-bus') !== -1) {
                 transbord.icon = 'https://maps.gstatic.com/mapfiles/transit/iw2/6/uk-london-bus.png';
@@ -275,19 +239,12 @@
           infoRoute.onlyOneMode = true;
         }
 
-        var hours = new Date(walking_time * 1000).getHours() - 1;
-        var minutes = new Date(walking_time * 1000).getMinutes();
-        infoRoute.walking_time = {
-          hours: hours > 0 ? hours + ' hr' : '',
-          minutes: minutes > 0 ? minutes + ' mins' : ''
-        };
+        infoRoute.walking_time = walking_time;
         infoRoute.departure_stop_time = departure_stop_time;
         infoRoute.departure_stop_station = departure_stop_station;
-
         infoRoute.unique_values[infoRoute.unique_values.length - 1].isLast = true;
-        jQuery.when.apply(jQuery, deferreds).done(function() {
-          deferredData.resolve(infoRoute);
-        });
+
+        deferredData.resolve(infoRoute);
         return deferredData.promise();
       }
 
@@ -299,28 +256,7 @@
     //*********************************************************
 
     function createTemplate(config) {
-      /*return "<div class='row row-head'>" +
-        "{{#start_time}}<div class='left col-xs-6'>{{#end_time.gmt}}{{start_time.date}}<span class='second-text'> ({{start_time.gmt}}) </span> - {{end_time.date}}<span class='second-text'> ({{end_time.gmt}}) </span>{{/end_time.gmt}}" +
-        "{{^end_time.gmt}}{{start_time.date}} - {{end_time.date}}<span class='second-text'> ({{start_time.gmt}}) </span>{{/end_time.gmt}}" +
-        "</div>" +
-        "<div class='right col-xs-6 duration'>{{duration}}</div>{{/start_time}}" +
-        "</div>" +
-        "<div class='row row-transbord wrap'><div class='col-xs-12 wrap'>" +
-        "{{#onlyOneMode}}<img src={{transbords.0.icon}}>  {{summary}}<span> {{distance}}</span> {{/onlyOneMode}}" +
-        "{{^onlyOneMode}}{{#transbords}}<img src={{icon}}> {{#line}}<span class='line' style='background-color:{{color}};color:{{text_color}}' title='{{agency}}'>{{line}}</span>{{/line}}{{^isLast}} > {{/isLast}}{{/transbords}}{{/onlyOneMode}}" +
-        "</div></div>" +
-        "<div class='row row-departure'><div class='col-xs-12'>{{#departure_stop_time}}{{departure_stop_time}} from {{departure_stop_station}}{{/departure_stop_time}}</div></div>" +
-        "<div class='row row-foot'>" +
-        "{{#walking_time.minutes}}{{^onlyOneMode}}<div class='additional-info col-xs-3'><span class='walking-sm'></span>{{walking_time.hours}} {{walking_time.minutes}}</div>" +
-        "<div class='panel-journey-buttons col-xs-9 right'>{{/onlyOneMode}}{{/walking_time.minutes}}" +
-        "{{^walking_time.minutes}}<div class='panel-journey-buttons col-xs-12 right'>{{/walking_time.minutes}}" +
-        "{{#onlyOneMode}}<div class='panel-journey-buttons col-xs-12 right'>{{/onlyOneMode}}" +
-        "<button type='button' class='info-journey-button btn btn-secondary stepByStep-button'>Step by Step view</button>" +
-        "<button type='button' class='info-journey-button btn btn-secondary mapView-button'>Map view</button>" +
-        "{{#enableBook}}<button type='button' class='info-journey-button btn btn-primary book-button'>Book</button>{{/enableBook}}" +
-        "</div>" +
 
-        "</div>";*/
       return "<div class='route-info-panel'><div class='row row-head'>" +
         "<div class='right col-xs-12 duration'>{{duration}} / {{distance}}</div>" +
         "</div>" +
@@ -345,16 +281,7 @@
 
     }
 
-    function createCollapseTemplate(config) {
-      return "<div class='row row-transbord wrap'>" +
-        "<div class='col-xs-8 wrap'>" +
-        "{{#onlyOneMode}}<img src={{transbords.0.icon}}> {{summary}}{{/onlyOneMode}}" +
-        "{{^onlyOneMode}}Using {{#unique_values}} <img src={{icon}}> {{#line}}<span class='line' style='background-color:{{color}};color:{{text_color}}' title='{{agency}}'>{{line}}</span>{{/line}}{{^isLast}} , {{/isLast}}{{/unique_values}}{{/onlyOneMode}}" +
-        "</div>" +
-        "<div class='right col-xs-4 ellipsis duration'>{{duration}}</div>" +
 
-        "</div>";
-    }
 
     function createDomID() {
       var i = ++ID;

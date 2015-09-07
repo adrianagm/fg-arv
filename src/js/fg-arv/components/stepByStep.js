@@ -38,27 +38,7 @@
               return id;
             },
             calculateSize: function() {
-              jQuery(container).find('.panel-body').css('overflow-x', 'hidden');
-              var containerMaxHeight = jQuery(container).css('max-height').split('p')[0];
-              var heightPanelHeading = config.widget.widgetElement.find('.fg-arv_info-journey-component').find('.panel-heading').innerHeight();
-
-              if (jQuery('html').hasClass('ie8')) {
-                jQuery(container).find('.panel-body').css('max-height', containerMaxHeight - heightPanelHeading + 30 + 'px');
-              } else {
-                jQuery(container).find('.panel-body').css('max-height', containerMaxHeight - heightPanelHeading + 'px');
-              }
               var stepPanel = jQuery(container).find('.steps-panel');
-              var stepHeight = calculateHeight(conf);
-              if (containerMaxHeight > 300 && stepHeight > 20) {
-                stepPanel.css('max-height', stepHeight + 'px');
-                jQuery(container).find('.panel-body').css('overflow-y', 'hidden');
-                stepPanel.css('overflow-y', 'auto');
-              } else {
-                stepPanel.css('max-height', '100%');
-                stepPanel.css('overflow', 'hidden');
-                jQuery(container).find('.panel-body').css('overflow-y', 'auto');
-              }
-
               var widthStep = stepPanel.innerWidth() - stepPanel.find('.time-info').innerWidth() - 70;
               stepPanel.find('.step-detail').css('width', widthStep + 'px');
 
@@ -68,7 +48,7 @@
 
           };
 
-          /* jQuery(window).resize(function() {
+          jQuery(window).resize(function() {
             if (resizeStepPanelTimeout) {
               clearTimeout(resizeStepPanelTimeout);
             }
@@ -77,10 +57,7 @@
             }, 100);
           });
           component.calculateSize();
-          setTimeout(function() {
-            componentElement.find('.info-journey-button.back-button').css('float', 'right');
-            componentElement.find('.info-journey-button.book-button').css('float', 'right');
-          }, 10);*/
+
           jQuery(container).find('.close-panel').click(function() {
             // conf.closePanel();
             componentElement.html('');

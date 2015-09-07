@@ -45,6 +45,17 @@
         .message {
             padding-top: 5px;
         }
+        .panel-form {
+            padding: 0 !important;
+            table-layout: fixed;
+            width: 100%;
+            button {
+                width: 100%;
+            }
+            td {
+                padding: 0 1px;
+            }
+        }
         .choose-opt .btn-group {
             padding: 0;
             border: none;
@@ -59,8 +70,8 @@
         .choose-opt a {
             display: table-caption;
         }
-        .choose-opt .row{
-          padding:0;
+        .choose-opt .row {
+            padding: 0 !important;
         }
     }
     .journeys-separated {
@@ -142,9 +153,6 @@
         .route-info-panel {
             border-left: 15px solid @fg-arv_middle-gray;
         }
-        .route-info-panel:hover {
-            border-left-color: @fg-arv_main-color;
-        }
         .distance-info {
             color: @fg-arv_middle-gray;
             font-size: 12px;
@@ -164,6 +172,12 @@
                 }
             }
         }
+    }
+    .panel-route.selected .route-info-panel {
+        border-left-color: @fg-arv_main-color;
+    }
+    .panel-route.focused:not(.selected) .route-info-panel{
+      border-left: 15px solid @fg-arv_dark-gray;
     }
     .steps-panel {
         padding: 10px 0;
@@ -306,13 +320,13 @@
             .step-line {
                 padding: 5px 3px;
                 width: 6px;
-                top: 2px;
+                top: 4px;
                 left: -1px;
             }
             .walk-line {
                 background: url("http://upload.wikimedia.org/wikipedia/commons/d/d4/WX_circle_lightblue.png") center repeat-y;
                 background-size: 6px 6px;
-                background-repeat: space;
+                //background-repeat: space;
                 padding: 4px;
             }
         }

@@ -27,76 +27,155 @@
       strokeColor: '#C00'
     },
     DRIVING: {
-      strokeColor: '#808080'
+      strokeColor: '#000'
     }
   };
 
-  define(['fg-arv/utils', 'fg-arv/google-helper'], function(utils, googleHelper) {
-    var route = [];
-    /** START - ONLY FOR TESTING SPRINT 1 **/
-    var routeSelected;
-    /** END - ONLY FOR TESTING SPRINT 1 **/
+  define(['fg-arv/utils', 'fg-arv/google-helper', 'fg-arv/components/journeys'], function(utils, googleHelper, journeys) {
+    var _routes = [],
+      routeSelected = [],
+      routes,
+      map;
+
     var module = {
       createComponent: function(config) {
-        /** START - ONLY FOR TESTING SPRINT 1 **/
-        if (routeSelected) {
-          routeSelected.setMap(null);
-        }
-        /** END - ONLY FOR TESTING SPRINT 1 **/
-        module.drawRoute(config);
-      },
-      drawRoute: function(config) {
-        var path = config.route.overview_path;
-        var steps = config.route.legs[0].steps;
-        for (var s = 0; s < steps.length; s++) {
-          var step = new google.maps.Polyline({
-            map: config.map,
-            path: steps[s].path,
-            /** START - ONLY FOR TESTING SPRINT 1 **/
-            globalPath: path
-              /** END - ONLY FOR TESTING SPRINT 1 **/
-          });
-          step.setOptions(STYLES[steps[s].travel_mode]);
-          if (steps[s].transit) {
-            if (steps[s].transit.line.color) {
-              step.setOptions({
-                strokeColor: steps[s].transit.line.color
-              });
-            }
-          }
+        var component;
+        map = config.map;
+        routes = config.routes;
 
-          /** START - ONLY FOR TESTING SPRINT 1 **/
-          google.maps.event.addListener(step, 'click', function(h) {
-            if (routeSelected) {
-              routeSelected.setMap(null);
+        component = {
+          init: function(routes) {
+            for (var i in routes) {
+              component.drawSimpleRoute(routes[i]);
+
             }
-            var optionsLine = {
-              strokeColor: 'red',
-              strokeOpacity: 1.0,
-              strokeWeight: 7,
+          },
+          drawSimpleRoute: function(route) {
+            var path = route.overview_path;
+
+            var _route = new google.maps.Polyline({
+              map: map,
+              path: path,
+              strokeColor: '#939393',
+              strokeOpacity: 1,
               editable: false,
               geodesic: true,
-              zIndex: 1000
-            };
-            routeSelected = new google.maps.Polyline({
-              map: config.map,
-              path: step.globalPath
+              zIndex: 500
             });
-            routeSelected.setOptions(optionsLine);
-          });
 
-          /** END - ONLY FOR TESTING SPRINT 1 **/
-          route.push(step);
-        }
-        var bounds = config.route.bounds;
-        config.map.fitBounds(bounds);
-      },
-      deleteRoute: function() {
-        for (var step = 0; step < route.length; step++) {
-          route[step].setMap(null);
-        }
-        route = [];
+            google.maps.event.addListener(_route, 'mouseover', function(h) {
+              journeys.focusOnRoutePanel(route);
+            });
+            google.maps.event.addListener(_route, 'mouseout', function(h) {
+              journeys.leaveRoutePanel(route);
+            });
+            google.maps.event.addListener(_route, 'click', function(h) {
+              journeys.clickOnRoutePanel(route);
+            });
+
+            var bounds = route.bounds;
+            map.fitBounds(bounds);
+            _routes.push(_route);
+          },
+          drawSelectedRoute: function(route) {
+            var path = route.overview_path;
+            var steps = route.legs[0].steps;
+            for (var s = 0; s < steps.length; s++) {
+              var step = new google.maps.Polyline({
+                map: map,
+                path: steps[s].path,
+                /** START - ONLY FOR TESTING SPRINT 1 **/
+                globalPath: path
+                /** END - ONLY FOR TESTING SPRINT 1 **/
+              });
+              step.setOptions(STYLES[steps[s].travel_mode]);
+              step.setOptions({
+                strokeOpacity: 1.0,
+                editable: false,
+                geodesic: true,
+                zIndex: 1000
+              });
+              if (steps[s].transit) {
+                if (steps[s].transit.line.color) {
+                  step.setOptions({
+                    strokeColor: steps[s].transit.line.color,
+                  });
+                }
+              }
+
+              routeSelected.push(step);
+            }
+            var bounds = route.bounds;
+            map.fitBounds(bounds);
+          },
+
+          deleteSelectedRoute: function() {
+            for (var step = 0; step < routeSelected.length; step++) {
+              routeSelected[step].setMap(null);
+            }
+            routeSelected = [];
+
+          },
+          deleteSimpleRoute: function(route) {
+            for (var i in _routes) {
+              if (_routes[i] === route) {
+                _routes[i].setMap(null);
+                _routes.splice(i, 1);
+              }
+            }
+          },
+          selectRoute: function(route) {
+            if (routeSelected) {
+              component.deleteSelectedRoute();
+            }
+            for (var i in _routes) {
+              _routes[i].setMap(null);
+              if (JSON.stringify(_routes[i].getPath().getArray()) === JSON.stringify(route.overview_path)) {
+                component.drawSelectedRoute(route);
+              } else {
+                _routes[i].setMap(map);
+              }
+
+            }
+          },
+          focusOnRoute: function(route) {
+            for (var i in _routes) {
+              if (JSON.stringify(_routes[i].getPath().getArray()) === JSON.stringify(route.overview_path)) {
+                _routes[i].setOptions({
+                  strokeColor: '#616161',
+                  zIndex: 900
+                });
+              } else {
+                _routes[i].setOptions({
+                  strokeColor: '#939393',
+                  zIndex: 500
+                });
+              }
+
+            }
+          },
+          leaveRoute: function() {
+            for (var i in _routes) {
+              _routes[i].setOptions({
+                strokeColor: '#939393',
+                zIndex: 500
+              });
+            }
+
+          },
+          clearRoutes: function() {
+            if (routeSelected) {
+              component.deleteSelectedRoute();
+            }
+            for (var i in _routes) {
+              component.deleteSimpleRoute(_routes[i]);
+            }
+          }
+        };
+        component.init(routes);
+        return component;
       }
+
 
     };
 
