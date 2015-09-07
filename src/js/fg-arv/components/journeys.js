@@ -346,7 +346,6 @@
         //"<div class='head-direction ellipsis col-xs-5' title='{{arrivalDirection}}'>{{arrivalDirection}}</div></div>{{/departureDirection}}" +
         //"<div class='close-panel right {{#departureDirection}}col-xs-1{{/departureDirection}} col-xs-1'><button type='button' class='btn btn-secondary'>Change</button></div>" +
         "</div>" +
-        "<div class='journeys-separated'></div>" +
         "<div class='panel-body'>" +
         "</div>" +
         "</div>";
@@ -380,7 +379,7 @@
         jQuery(container).find('.info-journey-panel').css('max-height', height - 30 + 'px');
       }
       var heightHeader = jQuery(container).find('.panel-heading').height();
-      jQuery(container).find('.panel-body').css('max-height', height - heightHeader - 40 + 'px');
+      jQuery(container).find('.panel-body').css('max-height', height - heightHeader - 39 + 'px');
       jQuery(container).find('.info-journey-panel').css('position', 'relative');
       jQuery(container).find('.info-journey-panel').css('top', heightForm + 'px');
       jQuery(container).find('.panel-body').css('overflow-y', 'auto');

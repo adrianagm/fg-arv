@@ -10,10 +10,14 @@
         padding-right: 0;
         background-color: @fg-arv_transparent;
         .close-panel {
+            display:none; //for testing
             position: absolute;
             left: -10px;
             color: @fg-arv_main-color;
             font-weight: bold;
+        }
+        &.list-routes-panel {
+            top: 0!important;
         }
     }
     .collapse-route {
@@ -28,6 +32,7 @@
         //background-color: @fg-arv_plain-text-color;
     }
     .panel-heading {
+        display:none; //for testing
         padding: 3px 10px;
         margin: 0;
         background-color: @fg-arv_form-bg;
@@ -75,10 +80,10 @@
         }
     }
     .journeys-separated {
-        height: 6px;
+        height: 2px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         //border-bottom: solid 1px #d6d6d6;
-        background-color: rgba(0, 0, 0, 0);
+        background-color: #86b5c7;
     }
     .walking-sm {
         width: 15px;
@@ -112,7 +117,7 @@
         }
     }
     .row {
-        padding: 5px 25px;
+        padding: 1px 25px;
         div:not(.alert) {
             padding: 3px 15px;
         }
