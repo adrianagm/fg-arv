@@ -12,6 +12,7 @@
     showPanels: jQuery.noop
   };
 
+
   var ID = 0;
 
   define(['fg-arv/utils', 'fg-arv/components/stepByStep', 'fg-arv/libs/mustache'], function(utils, stepByStep, Mustache) {
@@ -79,7 +80,7 @@
 
             },
             focusOnRouteListen: function() {
-              componentElement.hover(function() {
+              componentElement.mouseenter(function() {
                 component.focusOnRoute();
               });
               componentElement.mouseleave(function() {
@@ -94,7 +95,7 @@
 
             leaveRoute: function() {
               componentElement.removeClass('focused');
-              mapView.leaveRoute(conf.route);
+              mapView.leaveRoute();
             },
 
             clickOnRouteListen: function() {
@@ -127,6 +128,8 @@
         var route = conf.route.legs[0];
         var time = getInfoRouteGMTTime(conf);
         var infoRoute = {
+          index: conf.index + 1,
+          color: conf.color,
           summary: conf.route.summary,
           duration: route.duration ? route.duration.text : '',
           distance: route.distance ? route.distance.text : '',
@@ -258,7 +261,8 @@
     function createTemplate(config) {
 
       return "<div class='route-info-panel'><div class='row row-head'>" +
-        "<div class='right col-xs-12 duration'>{{duration}} / {{distance}}</div>" +
+        "<div class='col-xs-1'><div class='id-route' style='border-color:{{color}}'><span>{{index}}</span></div></div>" +
+        "<div class='right col-xs-11 duration'>{{duration}} / {{distance}}</div>" +
         "</div>" +
         "<div class='row row-transbord wrap'><div class='col-xs-12 wrap'>" +
         "{{#onlyOneMode}}<img src={{transbords.0.icon}}>  {{summary}} {{/onlyOneMode}}" +

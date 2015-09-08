@@ -12,6 +12,8 @@
 
   var ID = 0;
 
+
+
   define(['fg-arv/utils', 'fg-arv/components/infoJourney', 'fg-arv/libs/mustache', 'fg-arv/components/time', 'fg-arv/google-helper'], function(utils, infoJourney, Mustache, time, googleHelper) {
     var resizeTimeout, journeyPanels = [],
       componentElement;
@@ -26,6 +28,7 @@
           }, DEFAULT_CONFIG, config);
           var template = createTemplate(conf);
           var map = conf.widget.getMap();
+          var COLORS = conf.colors;
           var controls = map.controls[google.maps.ControlPosition[conf.position]].getArray();
           if (jQuery.inArray(container, controls) !== -1) {
             container = controls[jQuery.inArray(container, controls)];
@@ -47,6 +50,7 @@
           var listRoutes = conf.routes;
 
           component = {
+
             getID: function() {
               return id;
             },
@@ -106,6 +110,7 @@
                     heading: componentElement.find('.panel-heading').html(),
                     route: routes[rt],
                     index: rt,
+                    color: rt < 10 ? COLORS[rt] : COLORS[parseInt(rt) / 10],
                     widget: config.widget,
                     mainContainer: container,
                     mapView: conf.mapViewComponent,
@@ -133,6 +138,7 @@
                   });
                 }
               }, 100);
+
 
             },
             clearSingleRoutesPanel: function() {
@@ -365,7 +371,8 @@
       var heightWidget = config.widget.widgetElement.height();
       var heightForm = config.widget.widgetElement.find('.form').height();
 
-      var height = heightWidget - heightForm - 20;
+      //var height = heightWidget - heightForm - 20;
+      var height = heightWidget - 20;
 
       if (jQuery('html').hasClass('ie8')) {
         jQuery(container).find('.info-journey-panel').css('max-height', height + 'px');
@@ -373,7 +380,7 @@
         jQuery(container).find('.info-journey-panel').css('max-height', height - 30 + 'px');
       }
       var heightHeader = jQuery(container).find('.panel-heading').height();
-      jQuery(container).find('.panel-body').css('max-height', height - heightHeader - 39 + 'px');
+      jQuery(container).find('.panel-body').css('max-height', height - 19 + 'px');
       jQuery(container).find('.info-journey-panel').css('position', 'relative');
       jQuery(container).find('.info-journey-panel').css('top', heightForm + 'px');
       jQuery(container).find('.panel-body').css('overflow-y', 'auto');
