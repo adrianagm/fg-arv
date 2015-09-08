@@ -93,17 +93,17 @@
 
         "{{#transbords}}" +
         "<div class='row'>" +
-        "<div class='col-xs-2 right time-info'>" +
+        "<div class='col-xs-1 right time-info'>" +
         "<div class='step-time bold'>{{departure_time}}</div>" +
         "<div class='step-icon'>{{^onlyOneMode}}<img src={{icon}}>{{/onlyOneMode}}{{#onlyOneMode}}<span class='icon-turn {{maneuver}}'></span>{{/onlyOneMode}}</div>" +
         "</div>" +
 
-        "<div class='col-xs-10 row step-squema'>" +
+        "<div class='col-xs-11 row step-squema'>" +
         "<div class='transit-stop-circle'></div>" +
         "<div class='col-xs-1 step-line {{^color}}walk-line{{/color}}' {{#color}} style='background-color: {{color}}; border-right:solid 1px {{text_color}}; border-left:solid 1px {{text_color}};' {{/color}}></div>" +
         "<div class='col-xs-11 step-info'>" +
         "<div class='step-detail {{#onlyOneMode}}one-mode{{/onlyOneMode}}'>" +
-        "<div class='stop-departure bold ellipsis title='{{departure_station}}'>{{departure_station}}</div>" +
+        "<div class='stop-departure transbord-station bold ellipsis title='{{departure_station}}'>{{departure_station}}</div>" +
         "</div>" +
         "<div class='step-detail step-description'>" +
         "<div class='step-instruction row'>" +
@@ -122,11 +122,11 @@
         "{{/transbords}}" +
 
         "<div class='row right time-info'>" +
-        "<div class='col-xs-2'>" +
+        "<div class='col-xs-1'>" +
         "<div class='step-time bold'>{{end_time.date}}</div>" +
         "</div>" +
 
-        "<div class='col-xs-10 row step-squema'>" +
+        "<div class='col-xs-11 row step-squema'>" +
         "<div class='transit-stop-circle'></div>" +
 
         "<div class='col-xs-11 step-info'>" +

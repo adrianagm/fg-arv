@@ -8,7 +8,6 @@
         margin-bottom: 0;
         padding-left: 0;
         padding-right: 0;
-        background-color: @fg-arv_transparent;
         .close-panel {
             display:none; //for testing
             position: absolute;
@@ -122,9 +121,10 @@
         }
     }
     .row {
-        padding: 1px 25px;
+        margin:0;
+        padding: 1px 10px;
         div:not(.alert) {
-            padding: 3px 15px;
+            padding: 0;
         }
     }
     .ellipsis {
@@ -140,6 +140,7 @@
     }
     .row-transbord {
         line-height: 25px;
+        padding-left: 25px;
         img {
             width: 25px;
             height: 25px;
@@ -173,13 +174,12 @@
             margin: 0 10px 2px;
             border: none;
             color: @fg-arv_main-color;
+            text-decoration: none;
+            vertical-align: middle;
         }
     }
     .panel-route {
         background-color: @fg-arv_plain-text-color;
-        .route-info-panel {
-            border-left: 15px solid @fg-arv_middle-gray;
-        }
         .distance-info {
             color: @fg-arv_middle-gray;
             font-size: 12px;
@@ -200,14 +200,11 @@
             }
         }
     }
-    .panel-route.selected .route-info-panel {
-        border-left-color: @fg-arv_main-color;
-    }
-    .panel-route.focused:not(.selected) .route-info-panel {
-        border-left: 15px solid @fg-arv_dark-gray;
+    .panel-route.selected {
+        background-color: #f1f1f1;
     }
     .steps-panel {
-        padding: 10px 0;
+        padding: 0;
         margin-bottom: 0;
         overflow-y: overlay;
         overflow-x: hidden;
@@ -220,10 +217,10 @@
         .time-info {
             .step-icon {
                 position: relative;
-                top: 20px;
+                top: 15px;
             }
             .step-time {
-                width: 70px;
+                width: 35px;
             }
             .icon-turn.turn-left {
                 width: 15px;
@@ -262,15 +259,21 @@
             margin-bottom: 0 !important;
         }
         .row {
-            padding-top: 0;
+            padding-top: 5px;
             padding-bottom: 0;
             width: 100%;
             .step-info {
                 top: -15px;
+                padding-left:10px;
             }
             .step-squema {
                 display: table;
                 background-color: #f1f1f1;
+                padding-left:10px;
+                padding-top:1px;
+                .transbord-station {
+                    border-bottom: 1px solid #c6c6c6;
+                }
             }
             [class*="col-"] {
                 float: none;
@@ -278,7 +281,6 @@
                 vertical-align: top;
             }
             .step-detail {
-                border-bottom: 1px solid #c6c6c6;
                 padding-left: 0;
                 padding-right: 0;
                 .step-instruction {
@@ -308,13 +310,13 @@
                 padding-left: 5px;
             }
             .stop-departure {
-                font-size: larger;
                 padding-left: 0;
                 padding-right: 0;
             }
             .step-description {
                 color: #999;
-                padding: 15px 0;
+                padding-top: 15px;
+                padding-bottom: 0px;
             }
             img {
                 width: 15px;
@@ -333,7 +335,7 @@
                 width: 12px;
                 height: 12px;
                 left: -3px;
-                top: 1px;
+                top: 2px;
                 -moz-border-radius: 50%;
                 -webkit-border-radius: 50%;
                 border-radius: 50%;

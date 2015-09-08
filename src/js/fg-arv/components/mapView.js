@@ -274,10 +274,8 @@
     function createInfoWindowTemplate(index) {
       return "<div id='infowindow-" + index + "' class='infowindow {{#selected}}selected{{/selected}} {{#focused}}focused{{/focused}}' >" +
         "<div class='row row-head'>" +
-        "<div class='col-xs-2 left id-route' style='border-color:{{color}}'><span>{{index}}</span></div>" +
-        "<div class='col-xs-10 distance-duration right'>{{duration}}</div>" +
+        "<div class='col-xs-12 left id-route' style='border-color:{{color}}'><span>{{index}}</span></div>" +
         "</div>" +
-
         "</div>";
     }
 

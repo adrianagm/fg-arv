@@ -41,7 +41,7 @@
           "</div>" +
           "</div>" +
           "</form>" +
-          "<div class='fg-arv_info-journey-component col-xs-12 col-sm-8 col-md-5'>" +
+          "<div class='fg-arv_info-journey-component col-xs-12 col-sm-8 col-md-4'>" +
           "</div>" +
           "</div>";
       }

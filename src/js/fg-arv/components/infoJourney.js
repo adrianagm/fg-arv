@@ -44,7 +44,6 @@
             getRoute: function() {
               return conf.route;
             },
-
             expand: function() {
               componentElement.removeClass('collapse-route');
               componentElement.addClass('expand-route');
@@ -52,8 +51,6 @@
               component.focusOnRouteListen();
               component.clickOnRouteListen();
               componentElement.find('.stepByStep-button').click(function() {
-
-
                 if (jQuery(this).hasClass('open')) {
                   componentElement.find('.stepByStep-button').removeClass('open');
                   componentElement.find('.stepByStep-button').addClass('zmdi-caret-down');
@@ -70,14 +67,22 @@
                     route: conf.route,
                     template: templateExpand,
                     data: component.getData()
-
                   });
                 }
-
               });
-
-
-
+            },
+            favouriteRoute: function() {
+              componentElement.find('.favorite-button').click(function() {
+                if (jQuery(this).hasClass('favourite')) {
+                  componentElement.find('.favorite-button').removeClass('favourite');
+                  componentElement.find('.favorite-button').removeClass('zmdi-favorite');
+                  componentElement.find('.favorite-button').addClass('zmdi-favorite-outline');
+                } else {
+                  componentElement.find('.favorite-button').removeClass('zdmi-favorite-outline');
+                  componentElement.find('.favorite-button').addClass('zmdi-favorite');
+                  componentElement.find('.favorite-button').addClass('favourite');
+                }
+              });
             },
             focusOnRouteListen: function() {
               componentElement.mouseenter(function() {
@@ -115,7 +120,7 @@
             dataInfoJourney = data;
             templateExpand = Mustache.render(createTemplate(conf), dataInfoJourney);
             component.expand();
-
+            component.favouriteRoute();
           });
           return component;
         }
@@ -262,20 +267,15 @@
 
       return "<div class='route-info-panel'><div class='row row-head'>" +
         "<div class='col-xs-1'><div class='id-route' style='border-color:{{color}}'><span>{{index}}</span></div></div>" +
-        "<div class='right col-xs-11 duration'>{{duration}} / {{distance}}</div>" +
+        "<div class='right col-xs-11 duration'>{{duration}} / {{distance}}.</div>" +
         "</div>" +
-        "<div class='row row-transbord wrap'><div class='col-xs-12 wrap'>" +
-        "{{#onlyOneMode}}<img src={{transbords.0.icon}}>  {{summary}} {{/onlyOneMode}}" +
-        "{{^onlyOneMode}}{{#transbords}}<img src={{icon}}> {{^isLast}} > {{/isLast}}{{/transbords}}{{/onlyOneMode}}" +
-        "</div></div>" +
-
-        "<div class='row row-foot'>" +
-        "<div class='col-xs-8 distance-info'>" +
-        "{{#onlyOneMode}} {{distance}} {{/onlyOneMode}}" +
-        "{{^onlyOneMode}}{{#transbords}} {{step_distance}} {{^isLast}} > {{/isLast}}{{/transbords}}{{/onlyOneMode}}" +
+        "<div class='row row-transbord wrap'><div class='col-xs-9 wrap'>" +
+        "{{#onlyOneMode}}<div><img src={{transbords.0.icon}}>  {{summary}}</div><div class='distance-info'>{{distance}}.</div> {{/onlyOneMode}}" +
+        "{{^onlyOneMode}}{{#transbords}}<div class='pull-left text-center'><div><img src={{icon}}></div>" +
+        "<div class='distance-info'>{{step_distance}}.</div></div><div class='pull-left'>{{^isLast}} > {{/isLast}}</div>{{/transbords}}{{/onlyOneMode}}" +
         "</div>" +
-        "<div class='panel-journey-buttons col-xs-4 right'>" +
-        "<a href='#' class='info-journey-button zmdi zmdi-favorite-outline zmdi-hc-3x favorite-button'></a>" +
+        "<div class='panel-journey-buttons col-xs-3 right'>" +
+        "<a href='#' class='info-journey-button zmdi zmdi-favorite-outline zmdi-hc-2x favorite-button'></a>" +
         "<a href='#' class='info-journey-button zmdi zmdi-caret-down zmdi-hc-3x stepByStep-button'></a>" +
         "</div>" +
         "</div>" +
