@@ -154,7 +154,7 @@
               var path = _routes[i].overview_path;
               if (JSON.stringify(path) === JSON.stringify(route.overview_path)) {
                 component.drawSelectedRoute(route, false);
-                component.focusOnInfowindow(route);
+                //component.focusOnInfowindow(route);
                 break;
               }
             }
@@ -197,7 +197,8 @@
             for (var i in _routes) {
               var path = _routes[i].overview_path;
               if (JSON.stringify(path) === JSON.stringify(route.overview_path)) {
-                if (!routes[i].selected) {
+                if (!_routes[i].selected) {
+                  console.log('focus');
                   component.openInfowindow(routes[i], i, config, false, true);
                   break;
                 }
@@ -236,12 +237,13 @@
               infowindows[index].setOptions({
                 pixelOffset: new google.maps.Size(0, 10)
               });
-
-              infowindowlisteners(infowindows[index]);
+              if (index == _routes.length - 1) {
+                infowindowlisteners(infowindows[index]);
+              }
 
 
             }
-            var templateRendered = Mustache.render(createInfoWindowTemplate(), data);
+            var templateRendered = Mustache.render(createInfoWindowTemplate(index), data);
             infowindows[index].setContent(templateRendered);
             if (selected) {
               infowindows[index].setZIndex(200);
@@ -270,8 +272,8 @@
       return "fg-arv-map-view-journey-" + i;
     }
 
-    function createInfoWindowTemplate() {
-      return "<div class='infowindow {{#selected}}selected{{/selected}} {{#focused}}focused{{/focused}}' >" +
+    function createInfoWindowTemplate(index) {
+      return "<div id='infowindow-" + index + "' class='infowindow {{#selected}}selected{{/selected}} {{#focused}}focused{{/focused}}' >" +
         "<div class='row row-head'>" +
         "<div class='col-xs-2 left id-route' style='border-color:{{color}}'><span>{{index}}</span></div>" +
         "<div class='col-xs-10 distance-duration right'>{{duration}}</div>" +
@@ -288,6 +290,23 @@
         iwOuter.css({
           'background-color': 'rgba(230, 230, 230, 0.9)'
         });
+        iwOuter.mouseenter(
+          function() {
+            var iw = this.firstChild.firstChild.firstChild;
+            var index = iw.id.split('-')[1];
+            journeys.focusOnRoutePanel(routes[index]);
+
+
+          }
+        );
+        iwOuter.mouseleave(
+          function() {
+            var iw = this.firstChild.firstChild.firstChild;
+            var index = iw.id.split('-')[1];
+            journeys.leaveRoutePanel(routes[index]);
+
+          });
+
 
         var iwBackground = iwOuter.prev();
 

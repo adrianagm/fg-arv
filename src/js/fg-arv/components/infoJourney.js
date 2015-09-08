@@ -80,7 +80,7 @@
 
             },
             focusOnRouteListen: function() {
-              componentElement.hover(function() {
+              componentElement.mouseenter(function() {
                 component.focusOnRoute();
               });
               componentElement.mouseleave(function() {
@@ -95,7 +95,7 @@
 
             leaveRoute: function() {
               componentElement.removeClass('focused');
-              mapView.leaveRoute(conf.route);
+              mapView.leaveRoute();
             },
 
             clickOnRouteListen: function() {
@@ -261,8 +261,8 @@
     function createTemplate(config) {
 
       return "<div class='route-info-panel'><div class='row row-head'>" +
-        "<div class='col-xs-2'><div class='id-route' style='border-color:{{color}}'><span>{{index}}</span></div></div>" +
-        "<div class='right col-xs-10 duration'>{{duration}} / {{distance}}</div>" +
+        "<div class='col-xs-1'><div class='id-route' style='border-color:{{color}}'><span>{{index}}</span></div></div>" +
+        "<div class='right col-xs-11 duration'>{{duration}} / {{distance}}</div>" +
         "</div>" +
         "<div class='row row-transbord wrap'><div class='col-xs-12 wrap'>" +
         "{{#onlyOneMode}}<img src={{transbords.0.icon}}>  {{summary}} {{/onlyOneMode}}" +
