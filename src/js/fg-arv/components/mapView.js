@@ -31,6 +31,7 @@
     }
   };
 
+
   define(['fg-arv/utils', 'fg-arv/google-helper', 'fg-arv/components/journeys', 'fg-arv/libs/mustache', 'fg-arv/libs/infobubble'], function(utils, googleHelper, journeys, Mustache) {
     var _routes = [],
       routeSelected = [],
@@ -45,6 +46,7 @@
         var component;
         map = config.map;
         routes = config.routes;
+
 
         component = {
           init: function(routes) {
@@ -149,6 +151,7 @@
 
             });
             var stopInfo = {
+              stopName: type == 'arrival' ? stop.arrival_stop.name : stop.departure_stop.name,
               departureTime: type == 'arrival' ? false : stop.departure_time.text,
               arrivalTime: type == 'arrival' ? stop.arrival_time.text : type == 'departure' ? false : beforeStop.arrival_time.text
             };
@@ -312,6 +315,7 @@
           },
           clickOnStop: function(stopMarker, stop, info) {
             stopMarker.iw = component.createIW(stopMarker, stop, info);
+
             google.maps.event.addListener(stopMarker, 'click', function() {
               if (infowindowBubble) {
                 infowindowBubble.close();
@@ -325,13 +329,14 @@
           createIW: function(stopMarker, stop, info) {
             var iw = new InfoBubble();
             var stopInfo = {
-              stopName: stopMarker.departure ? stop.departure_stop.name : stop.arrival_stop.name,
+              stopName: info.stopName,
               departureTime: info.departureTime ? info.departureTime : false,
               arrivalTime: info.arrivalTime ? info.arrivalTime : false,
               line: stop.line,
               headsign: stop.headsign,
               num_stops: stop.num_stops,
-              agency: stop.agencies ? stop.agencies[0].name : false
+              agency: stop.line.agencies ? stop.line.agencies[0].name : false,
+              vehicle: stop.line.vehicle ? stop.line.vehicle.name : false
 
             };
 
@@ -348,7 +353,7 @@
               iw.addTab(tabs[tab].label, tabs[tab].template);
             }
 
-            openStreetTabListener(stopMarker, iw);
+            openStreetTabListener(stopMarker, iw, config.widgetElement);
             return iw;
           }
         };
@@ -382,33 +387,34 @@
 
     function createIWTemplate() {
       return "<div class='balloon data-tab content'>" +
-        "<h4>{{stopName}}</h4>" +
+        "<h5>{{stopName}}</h5>" +
         "<table>" +
-        "{{#arrivalTime}}<tr class='data-item'><td>Arrival Time: </td><td>{{arrivalTime}}</td></tr>{{/arrivalTime}}" +
-        "{{#departureTime}}<tr class='data-item'><td>Departure Time: </td><td>{{departureTime}}</td></tr>{{/departureTime}}" +
+        "{{#arrivalTime}}<tr class='data-item'><td>Arrival: </td><td>{{arrivalTime}}</td></tr>{{/arrivalTime}}" +
+        "{{#departureTime}}<tr class='data-item'><td>Departure: </td><td>{{departureTime}}</td></tr>{{/departureTime}}" +
         "{{#departureTime}}<tr class='data-item'><td>Headsign: </td><td>{{headsign}}</td></tr>{{/departureTime}}" +
-        "{{#departureTime}}<tr class='data-item'><td>Line: </td><td><img src={{line.vehicle.icon}}> <span class='line' style='background-color:{{line.color}};color:{{line.text_color}}' title='{{agency}}'>{{line.short_name}} </span><span> ({{num_stops}} stops)</span></td></tr>{{/departureTime}}" +
+        "{{#departureTime}}<tr class='data-item'><td>Line: </td><td><img class='icon' src={{line.vehicle.icon}} {{#vehicle}}title='{{vehicle}}'{{/vehicle}}> <span class='line' style='background-color:{{line.color}};color:{{line.text_color}}' {{#agency}}title='{{agency}}'{{/agency}}>{{line.short_name}} </span><span> ({{num_stops}} stops)</span></td></tr>{{/departureTime}}" +
         "</table></div>";
 
     }
 
     function createSVTemplate() {
-      return '<div class="balloon street-tab content"><div class="pano"></div><div class="map-pano"></div></div>';
+      return '<div class="balloon street-tab content"><div class="pano"></div><div class="map-pano"></div><span class="zmdi zmdi-fullscreen zmdi-hc-2x zmdi-hc-border pull-left fullscreen" title="Fullscreen"></span></span></div>';
 
     }
 
-    function openStreetTabListener(marker, iw) {
+    function openStreetTabListener(marker, iw, widget) {
       google.maps.event.addDomListener(iw, 'content_changed', function() {
         google.maps.event.addDomListener(iw, 'domready', function() {
           if (iw.content_.querySelectorAll('.pano')[0]) {
-
-            initializeStreetView(marker);
+            initializeStreetView(marker, widget);
           }
+
         });
+
       });
     }
 
-    function initializeStreetView(marker) {
+    function initializeStreetView(marker, widget) {
       var mapPano = marker.iw.content_.querySelectorAll('.map-pano')[0];
       var pano = marker.iw.content_.querySelectorAll('.pano')[0];
       var heading = 90;
@@ -425,6 +431,22 @@
       var sv = new google.maps.StreetViewService();
       sv.getPanoramaByLocation(marker.position, 50, processSVData);
 
+      var overlay = document.createElement('div');
+      var fullscreen = marker.iw.content_.querySelectorAll('.fullscreen')[0];
+      jQuery(fullscreen).click(function() {
+
+        overlay.className = 'overlay-panel';
+        var exit = document.createElement('span');
+        exit.className = 'zmdi zmdi-fullscreen-exit zmdi-hc-2x zmdi-hc-border pull-left fullscreen-exit';
+        exit.title = 'Exit Fullscreen';
+        jQuery(exit).click(function() {
+          overlay.parentNode.removeChild(overlay);
+        });
+        overlay.appendChild(exit);
+        widget[0].appendChild(overlay);
+        sv.getPanoramaByLocation(marker.position, 50, processSVFullscreennData);
+      });
+
       function processSVData(data, status) {
         if (status == google.maps.StreetViewStatus.OK) {
           var panorama = new google.maps.StreetViewPanorama(pano, panoramaOptions);
@@ -432,6 +454,15 @@
           map.setStreetView(panorama);
         } else {
           pano.innerHTML = 'Street View not available in this position';
+          fullscreen.display = 'none';
+        }
+      }
+
+      function processSVFullscreennData(data, status) {
+        if (status == google.maps.StreetViewStatus.OK) {
+          var panorama = new google.maps.StreetViewPanorama(overlay, panoramaOptions);
+          var map = new google.maps.Map(mapPano);
+          map.setStreetView(panorama);
         }
       }
     }

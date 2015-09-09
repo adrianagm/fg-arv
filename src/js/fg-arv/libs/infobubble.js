@@ -130,7 +130,7 @@
    * @const
    * @private
    */
-  InfoBubble.prototype.MIN_WIDTH_ = 300;
+  InfoBubble.prototype.MIN_WIDTH_ = 250;
 
 
   /**

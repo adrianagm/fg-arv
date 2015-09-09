@@ -1,9 +1,13 @@
 /*
     Styles for map infowindows aka ballons.
 */
-.bubble{
-  z-index: 1000 !important;
+
+.bubble {
+    z-index: 1000 !important;
+    font-size: 12px;
+    width: 250px !important;
 }
+
 .tabs-container {
     width: 200px;
 }
@@ -23,23 +27,22 @@
 }
 
 .contentContainer {
-    height: 200px !important;
-    width: 350px !important;
+    height: 150px !important;
+    width: 250px !important;
     padding: 0 !important;
 }
 
 .tabsContainer {
-    width: 300px !important;
+    width: 250px !important;
     padding-left: 0px !important;
-   
     div {
         padding-right: 15px !important;
     }
 }
 
 .balloon.content {
-    width: 350px;
-    height: 220px;
+    width: 250px;
+    height: 120px;
     padding: 10px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -47,13 +50,13 @@
 }
 
 .ballon.data-tab {
-    height: 220px;
+    height: 120px;
 }
 
 .balloon .pano {
     position: relative;
     width: 100%;
-    height: 90%;
+    height: 130px;
 }
 
 .balloon .map-pano {
@@ -109,16 +112,31 @@
     /*display:none;*/
 }
 
-  /*Data tab*/
-.balloon.data-tab table{
+
+/*Data tab*/
+
+.balloon.data-tab table {
     width: 100%;
 }
 
-.balloon.data-tab .data-item{
+.balloon.data-tab .data-item {
     width: 100%;
 }
 
-.balloon.data-tab .data-item td{
-    padding: 5px;
-   
+.balloon.data-tab .data-item td {
+    padding: 2px;
+    .icon {
+        width: 20px;
+        height: 20px;
+    }
 }
+
+.fullscreen {
+    position: absolute;
+    top: 12px;
+    left: 206px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+
