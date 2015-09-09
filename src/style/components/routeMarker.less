@@ -1,0 +1,122 @@
+.route-marker {
+    position: relative;
+    border: 1px solid #c2e1f5;
+    width: 17px;
+    height: 17px;
+    border-radius: 2px;
+    margin-top: -9px;
+    .id-route {
+          color: #ddf8c6;
+          text-align: center;
+          font-size: 17px;
+          line-height: 18px;
+          font-weight: bold;
+          overflow: visible;
+          font-family: 'Terminal Dosis', sans-serif;
+          text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+          margin-left:3px;
+    }
+    &:before, &:after {
+        top: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+    &:before {
+          border-color: rgba(194, 225, 245, 0);
+          border-top-color: #c2e1f5;
+          border-width: 9px;
+          margin-left: -9px;
+    }
+    &:after {
+          border-color: rgba(136, 183, 213, 0);
+          border-top-color: #88b7d5;
+          border-width: 8px;
+          margin-left: -8px;
+    }
+
+    &:hover {
+      cursor:pointer;
+    }
+}
+
+#routemarker-0{
+    background: @fg-arv_marker-0;
+    &:after{
+          border-top-color: @fg-arv_marker-0;
+    }
+}
+
+#routemarker-1{
+    background: @fg-arv_marker-1;
+    &:after{
+          border-top-color: @fg-arv_marker-1;
+    }
+}
+
+#routemarker-2{
+    background: @fg-arv_marker-2;
+    &:after{
+          border-top-color: @fg-arv_marker-2;
+    }
+}
+
+#routemarker-3{
+    background: @fg-arv_marker-3;
+    &:after{
+          border-top-color: @fg-arv_marker-3;
+    }
+}
+
+#routemarker-4{
+    background: @fg-arv_marker-4;
+    &:after{
+          border-top-color: @fg-arv_marker-4;
+    }
+}
+
+#routemarker-5{
+    background: @fg-arv_marker-5;
+    &:after{
+          border-top-color: @fg-arv_marker-5;
+    }
+}
+
+#routemarker-6{
+    background: @fg-arv_marker-6;
+    &:after{
+          border-top-color: @fg-arv_marker-6;
+    }
+}
+
+#routemarker-7{
+    background: @fg-arv_marker-7;
+    &:after{
+          border-top-color: @fg-arv_marker-7;
+    }
+}
+
+#routemarker-8{
+    background: @fg-arv_marker-8;
+    &:after{
+          border-top-color: @fg-arv_marker-8;
+    }
+}
+
+.route-marker.selected {    
+    z-index:1001; 
+    .id-route {
+    }
+    &:before {
+      }
+    &:after {
+    }
+    &:hover {
+      cursor:pointer;
+    }
+}
+
