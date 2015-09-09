@@ -96,6 +96,7 @@
             var path = route.overview_path;
             var steps = route.legs[0].steps;
             for (var s = 0; s < steps.length; s++) {
+              //Selected line bigger than focus line
               var weight = selected ? 6 : 4;
               var step = new google.maps.Polyline({
                 map: map,
@@ -129,10 +130,7 @@
                 }
               }
               selected ? routeSelected.push(step) : routeFocus.push(step);
-
             }
-
-
           },
           addStop: function(stop, type, beforeStop) {
             var stopMarker = new google.maps.Marker({
@@ -162,6 +160,9 @@
               routeSelected[step].setMap(null);
             }
             routeSelected = [];
+            if (infowindowBubble && infowindowBubble.isOpen) {
+              infowindowBubble.close();
+            }
           },
           deleteSimpleRoute: function(route) {
             for (var i in _routes) {

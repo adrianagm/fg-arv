@@ -12,8 +12,6 @@
 
   var ID = 0;
 
-
-
   define(['fg-arv/utils', 'fg-arv/components/infoJourney', 'fg-arv/libs/mustache', 'fg-arv/components/time', 'fg-arv/google-helper'], function(utils, infoJourney, Mustache, time, googleHelper) {
     var resizeTimeout, journeyPanels = [],
       componentElement;
@@ -50,7 +48,6 @@
           var listRoutes = conf.routes;
 
           component = {
-
             getID: function() {
               return id;
             },
@@ -138,7 +135,6 @@
                   });
                 }
               }, 100);
-
 
             },
             clearSingleRoutesPanel: function() {

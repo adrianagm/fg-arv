@@ -213,6 +213,7 @@
     var bubble = this.bubble_ = document.createElement('DIV');
     bubble.style['position'] = 'absolute';
     bubble.style['zIndex'] = this.baseZIndex_;
+    bubble.className = 'bubble';
 
     var tabsContainer = this.tabsContainer_ = document.createElement('DIV');
     tabsContainer.style['position'] = 'relative';

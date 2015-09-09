@@ -4,21 +4,21 @@
   "description": "First Group Alternative Routes Viewer Widget",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Emergya/fg-arv.git"
+    "url": "https://github.com/Emergya/firstgroupg-arv.git"
   },
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-concat": "^0.5.1",
-    "grunt-contrib-copy": "^0.8.0",
-    "grunt-contrib-cssmin": "^0.12.2",
-    "grunt-contrib-less": "^1.0.1",
-    "grunt-contrib-requirejs": "^0.4.4",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-version": "^1.0.0",
+    "grunt": "~0.4.5",
+    "grunt-contrib-concat": "~0.5.1",
+    "grunt-contrib-copy": "~0.8.1",
+    "grunt-contrib-cssmin": "~0.13.0",
+    "grunt-contrib-less": "~1.0.1",
+    "grunt-contrib-requirejs": "~0.4.4",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-version": "~1.0.0",
     "rbush-knn": "1.0.0"
   },
   "bugs": {
-    "url": "https://github.com/Emergya/fg-arv/issues"
+    "url": "https://github.com/Emergya/firstgroupg-arv/issues"
   },
   "main": "Gruntfile.js",
   "directories": {
