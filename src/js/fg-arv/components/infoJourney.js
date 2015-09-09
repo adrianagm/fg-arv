@@ -17,6 +17,8 @@
 
   define(['fg-arv/utils', 'fg-arv/components/stepByStep', 'fg-arv/libs/mustache'], function(utils, stepByStep, Mustache) {
 
+    var routeCount = -1;
+
     var module = {
       createComponent: function(config) {
         var that = this;
@@ -72,15 +74,26 @@
               });
             },
             favouriteRoute: function() {
+              var favouritesRoutes = config.widget.apiObject.getFavouritesRoutes();
+              for (var r = 0; r < favouritesRoutes.length; r++) {
+                if (favouritesRoutes[r] == component.getRoute().overview_polyline.replace(/[^\w\s]/gi, '')) {
+                  componentElement.find('.favorite-button').removeClass('zdmi-favorite-outline');
+                  componentElement.find('.favorite-button').addClass('zmdi-favorite');
+                  componentElement.find('.favorite-button').addClass('favourite');
+                  break;
+                }
+              }
               componentElement.find('.favorite-button').click(function() {
                 if (jQuery(this).hasClass('favourite')) {
                   componentElement.find('.favorite-button').removeClass('favourite');
                   componentElement.find('.favorite-button').removeClass('zmdi-favorite');
                   componentElement.find('.favorite-button').addClass('zmdi-favorite-outline');
+                  config.widget.apiObject.removeFavouriteRoute(component.getRoute().overview_polyline.replace(/[^\w\s]/gi, ''));
                 } else {
                   componentElement.find('.favorite-button').removeClass('zdmi-favorite-outline');
                   componentElement.find('.favorite-button').addClass('zmdi-favorite');
                   componentElement.find('.favorite-button').addClass('favourite');
+                  config.widget.apiObject.saveFavouriteRoute(component.getRoute().overview_polyline.replace(/[^\w\s]/gi, ''));
                 }
               });
             },
@@ -264,9 +277,9 @@
     //*********************************************************
 
     function createTemplate(config) {
-
+      routeCount++;
       return "<div class='route-info-panel'><div class='row row-head'>" +
-        "<div class='col-xs-1'><div class='id-route' style='border-color:{{color}}'><span>{{index}}</span></div></div>" +
+        "<div class='col-xs-1'><div class='id-route marker-" + routeCount + "' style='border-color:{{color}}'><span>{{index}}</span></div></div>" +
         "<div class='right col-xs-11 duration'>{{duration}} / {{distance}}.</div>" +
         "</div>" +
         "<div class='row row-transbord wrap'><div class='col-xs-9 wrap'>" +
@@ -275,8 +288,8 @@
         "<div class='distance-info'>{{step_distance}}.</div></div><div class='pull-left'>{{^isLast}} > {{/isLast}}</div>{{/transbords}}{{/onlyOneMode}}" +
         "</div>" +
         "<div class='panel-journey-buttons col-xs-3 right'>" +
-        "<a href='#' class='info-journey-button zmdi zmdi-favorite-outline zmdi-hc-2x favorite-button'></a>" +
-        "<a href='#' class='info-journey-button zmdi zmdi-caret-down zmdi-hc-3x stepByStep-button'></a>" +
+        "<a title='Add to favourite' href='#' class='info-journey-button zmdi zmdi-favorite-outline zmdi-hc-2x favorite-button'></a>" +
+        "<a title='Step by step' href='#' class='info-journey-button zmdi zmdi-caret-down zmdi-hc-3x stepByStep-button'></a>" +
         "</div>" +
         "</div>" +
         "</div>" +

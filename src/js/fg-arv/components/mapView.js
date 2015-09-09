@@ -31,11 +31,14 @@
     }
   };
 
-  define(['fg-arv/utils', 'fg-arv/google-helper', 'fg-arv/components/journeys', 'fg-arv/libs/mustache'], function(utils, googleHelper, journeys, Mustache) {
+  define(['fg-arv/utils', 'fg-arv/google-helper', 'fg-arv/components/journeys', 'fg-arv/libs/mustache', 'fg-arv/libs/richmarker', 'fg-arv/libs/richmarkerPosition'], function(utils, googleHelper, journeys, Mustache, RichMarker, RichMarkerPosition) {
     var _routes = [],
       routeSelected = [],
-      infowindows = [],
+      routeMarkers = [],
       routeFocus = [],
+      markerSteps = [],
+      toEnd = true,
+      indexPoint = 2,
       routes,
       map;
 
@@ -49,6 +52,7 @@
           init: function(routes) {
             for (var i in routes) {
               component.drawSimpleRoute(routes[i]);
+              component.addRouteMarker(routes[i], i);
             }
           },
           drawSimpleRoute: function(route) {
@@ -74,7 +78,7 @@
               clickLine.setOptions({
                 strokeOpacity: 0.01,
                 strokeWeight: 15,
-                zIndex: 1000
+                zIndex: 999
               });
               google.maps.event.addListener(clickLine, 'click', function(h) {
                 journeys.clickOnRoutePanel(route);
@@ -106,7 +110,7 @@
                 strokeWeight: weight,
                 editable: false,
                 geodesic: true,
-                zIndex: 999
+                zIndex: 998
               });
               if (steps[s].transit) {
                 if (steps[s].transit.line.color) {
@@ -143,7 +147,7 @@
                 component.drawSelectedRoute(route, true);
                 //Bound
                 component.fitBounds(route.bounds);
-                component.selectInfowindow(route);
+                component.selectRouteMarker(route);
                 break;
               }
             }
@@ -178,86 +182,106 @@
             //Move map center 200 pixels right
             map.panBy(-200, 0);
           },
-
-          selectInfowindow: function(route) {
+          selectRouteMarker: function(route) {
             for (var i in _routes) {
               var path = _routes[i].overview_path;
+              var routeMarker = jQuery('#routemarker-' + parseInt(i));
               if (JSON.stringify(path) === JSON.stringify(route.overview_path)) {
                 _routes[i].selected = true;
-                component.openInfowindow(routes[i], i, config, true);
+                routeMarker.addClass('selected');
+                google.maps.event.trigger(map, 'resize');
 
               } else {
+                routeMarker.removeClass('selected');
                 _routes[i].selected = false;
-                component.openInfowindow(routes[i], i, config);
+                //component.openInfowindow(routes[i], i, config);
               }
             }
           },
           focusOnInfowindow: function(route) {
             for (var i in _routes) {
+              var routeMarker = jQuery('#routemarker-' + parseInt(i));
               var path = _routes[i].overview_path;
               if (JSON.stringify(path) === JSON.stringify(route.overview_path)) {
                 if (!_routes[i].selected) {
-                  console.log('focus');
-                  component.openInfowindow(routes[i], i, config, false, true);
+                  routeMarker.addClass('focused');
+                  //component.openInfowindow(routes[i], i, config, false, true);
                   break;
                 }
               }
             }
           },
-
           leaveInfowindow: function() {
             for (var i in _routes) {
+              var routeMarker = jQuery('#routemarker-' + parseInt(i));
               if (!routes[i].selected) {
-                component.openInfowindow(routes[i], i, config, false, false);
+                routeMarker.removeClass('focused');
+                //component.openInfowindow(routes[i], i, config, false, false);
               }
             }
           },
-
-          openInfowindow: function(route, index, conf, selected, focused) {
+          drawMarker: function(route, index, markerPoint) {
             var data = {
               index: parseInt(index) + 1,
-              duration: route.legs[0].duration.text,
-              selected: selected,
-              focused: focused,
-              color: conf.colors[index]
+              color: config.colors[index]
             };
-            if (!infowindows[index]) {
-              var arr = route.overview_path;
-              var middle = arr[Math.floor(arr.length / 2)];
+            var templateRendered = Mustache.render(createRouteMarkerTemplate(index), data);
+            routeMarkers[index] = new RichMarker({
+              position: markerPoint,
+              content: templateRendered,
+              flat: true,
+              anchor: RichMarkerPosition.BOTTOM,
+              height: '15px',
+              draggable: false,
+              map: map
+            });
 
-              for (var i in infowindows) {
-                if (middle.equals(infowindows[i].getPosition())) {
-                  middle = arr[Math.floor(arr.length / 3)];
+            routeMarkers[index].setZIndex(1000);
+
+            google.maps.event.addListener(routeMarkers[index], 'click', function(event) {
+              event.stopPropagation();
+              journeys.clickOnRoutePanel(route);
+            });
+
+          },
+          addRouteMarker: function(route, index) {
+            //Search best step to add marker
+            if (!routeMarkers[index]) {
+              var arrSteps = route.legs[0].steps;
+              var indexMiddleStep = Math.floor(arrSteps.length / 2);
+              var middleSteps = arrSteps[indexMiddleStep];
+              if (!stepUsed(middleSteps)) {
+                var markerPoint = null;
+                if (middleSteps.travel_mode !== 'WALKING') {
+                  markerPoint = getStepPoint(middleSteps);
+                  component.drawMarker(route, index, markerPoint);
+                  markerSteps.push(middleSteps.encoded_lat_lngs.replace(/[^\w\s]/gi, ''));
+                } else {
+                  var nextStep = findNextStep(arrSteps, indexMiddleStep);
+                  if (nextStep === null) {
+                    markerPoint = getRoutePoint(route);
+                  } else {
+                    markerPoint = getStepPoint(nextStep);
+                    markerSteps.push(nextStep.encoded_lat_lngs.replace(/[^\w\s]/gi, ''));
+                  }
+                  component.drawMarker(route, index, markerPoint);
                 }
+              } else {
+                var nextStep = findNextStep(arrSteps, indexMiddleStep);
+                if (nextStep === null) {
+                  markerPoint = getRoutePoint(route);
+                } else {
+                  markerSteps.push(nextStep.encoded_lat_lngs.replace(/[^\w\s]/gi, ''));
+                  markerPoint = getStepPoint(nextStep);
+                }
+                component.drawMarker(route, index, markerPoint);
               }
-
-              infowindows[index] = new google.maps.InfoWindow();
-              infowindows[index].setPosition(middle);
-              infowindows[index].setOptions({
-                pixelOffset: new google.maps.Size(0, 10)
-              });
-              if (index == _routes.length - 1) {
-                infowindowlisteners(infowindows[index]);
-              }
-
-
             }
-            var templateRendered = Mustache.render(createInfoWindowTemplate(index), data);
-            infowindows[index].setContent(templateRendered);
-            if (selected) {
-              infowindows[index].setZIndex(200);
-            } else {
-              infowindows[index].setZIndex(100);
-            }
-
-            infowindows[index].open(conf.map);
           }
         };
         component.init(routes);
         return component;
       }
-
-
     };
 
 
@@ -271,95 +295,83 @@
       return "fg-arv-map-view-journey-" + i;
     }
 
-    function createInfoWindowTemplate(index) {
-      return "<div id='infowindow-" + index + "' class='infowindow {{#selected}}selected{{/selected}} {{#focused}}focused{{/focused}}' >" +
-        "<div class='row row-head'>" +
-        "<div class='col-xs-12 left id-route' style='border-color:{{color}}'><span>{{index}}</span></div>" +
-        "</div>" +
+    function createRouteMarkerTemplate(index) {
+      return "<div id='routemarker-" + index + "' class='route-marker'>" +
+        "<span class='id-route'>{{index}}</span>" +
         "</div>";
     }
 
-    function infowindowlisteners(infowindow) {
-      //css
-      google.maps.event.addListener(infowindow, 'domready', function() {
+    function stepUsed(middleStep) {
+      var key = middleStep.encoded_lat_lngs.replace(/[^\w\s]/gi, '');
+      var enc = false;
+      for (var i in markerSteps) {
+        if (key === markerSteps[i]) {
+          enc = true;
+          break;
+        }
+      }
+      return enc;
+    }
 
-        var iwOuter = jQuery('.gm-style-iw');
-        iwOuter.css({
-          'background-color': 'rgba(230, 230, 230, 0.9)'
-        });
-        iwOuter.mouseenter(
-          function() {
-            var iw = this.firstChild.firstChild.firstChild;
-            var index = iw.id.split('-')[1];
-            journeys.focusOnRoutePanel(routes[index]);
-
-
-          }
-        );
-        iwOuter.mouseleave(
-          function() {
-            var iw = this.firstChild.firstChild.firstChild;
-            var index = iw.id.split('-')[1];
-            journeys.leaveRoutePanel(routes[index]);
-
-          });
-
-
-        var iwBackground = iwOuter.prev();
-
-        // Remove the background shadow DIV
-        iwBackground.children(':nth-child(2)').css({
-          'display': 'none'
-        });
-
-        // Remove the white background DIV
-        iwBackground.children(':nth-child(4)').css({
-          'display': 'none'
-        });
-        iwBackground.children(':nth-child(3)').find('div').children().css({
-          'z-index': '1',
-          'width': '10px',
-          'background-color': 'rgba(230, 230, 230, 0.9)',
-
-        });
-
-        var arrows = iwBackground.children(':nth-child(3)').find('div').children();
-        for (var i = 0; i < arrows.length; i++) {
-          if (arrows[i].style.transform === 'skewX(22.6deg)') {
-            arrows[i].style.transform = 'skewX(35.6deg)';
-            arrows[i].style['border-left'] = '1px solid rgba(72, 181, 233, 0.6)';
-          } else if (arrows[i].style.transform === 'skewX(-22.6deg)') {
-            arrows[i].style.transform = 'skewX(-35.6deg)';
-            arrows[i].style['border-right'] = '1px solid rgba(72, 181, 233, 0.6)';
+    function findNextStep(arrSteps, indexMiddleStep) {
+      if (toEnd) {
+        for (var i = indexMiddleStep; i < arrSteps.length; i++) {
+          if (!stepUsed(arrSteps[i])) {
+            //Next time loop before step's middle
+            toEnd = false;
+            return arrSteps[i];
           }
         }
-        var iwOuterselected = jQuery('.infowindow.selected').parent().parent().parent();
-        if (iwOuterselected) {
-          iwOuterselected.css({
-            'background-color': 'rgba(255, 255, 255, 1)'
-          });
-          var iwBackgroundSelected = iwOuterselected.prev();
-          iwBackgroundSelected.children(':nth-child(3)').find('div').children().css({
-            'background-color': 'rgba(255, 255, 255, 1)',
-
-          });
+        for (var i = indexMiddleStep; i >= 0; i--) {
+          if (!stepUsed(arrSteps[i])) {
+            //Next time loop before step's middle
+            toEnd = true;
+            return arrSteps[i];
+          }
         }
-
-        var iwOuterfocused = jQuery('.infowindow.focused').parent().parent().parent();
-        if (iwOuterfocused) {
-          iwOuterfocused.css({
-            'background-color': 'rgba(210, 210, 210, 1)'
-          });
-          var iwBackgroundfocused = iwOuterfocused.prev();
-          iwBackgroundfocused.children(':nth-child(3)').find('div').children().css({
-            'background-color': 'rgba(210, 210, 210, 1)',
-
-          });
+      } else {
+        for (var i = indexMiddleStep; i >= 0; i--) {
+          if (!stepUsed(arrSteps[i])) {
+            //Next time loop before step's middle
+            toEnd = true;
+            return arrSteps[i];
+          }
         }
+        for (var i = indexMiddleStep; i < arrSteps.length; i++) {
+          if (!stepUsed(arrSteps[i])) {
+            //Next time loop before step's middle
+            toEnd = false;
+            return arrSteps[i];
+          }
+        }
+      }
+      return null;
+    }
 
-      });
+    function getRoutePoint(route) {
+      var arr = route.overview_path;
+      var middlePoint = arr[Math.floor(arr.length / indexPoint)];
+      for (var i in routeMarkers) {
+        if (middlePoint.equals(routeMarkers[i].getPosition())) {
+          indexPoint++;
+          middlePoint = arr[Math.floor(arr.length / indexPoint)];
+        }
+      }
+      indexPoint++;
+      return middlePoint;
+    }
 
-
+    function getStepPoint(step) {
+      var arr = step.path;
+      var middle = arr[Math.floor(arr.length / indexPoint)];
+      for (var i in routeMarkers) {
+        if (middle.equals(routeMarkers[i].getPosition())) {
+          indexPoint++;
+          middle = arr[Math.floor(arr.length / indexPoint)];
+        }
+      }
+      indexPoint++;
+      return middle;
     }
 
   });

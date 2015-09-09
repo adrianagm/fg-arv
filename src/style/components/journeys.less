@@ -27,9 +27,6 @@
         opacity: 1;
         cursor: pointer;
     }
-    .panel-body {
-        //background-color: @fg-arv_plain-text-color;
-    }
     .panel-heading {
         display:none; //for testing
         padding: 3px 10px;
@@ -98,26 +95,106 @@
             font-size: 10px;
         }
         .id-route {
-            width: 20px;
-            height: 20px;
-            border: 10px solid #48b5e9;
-            border-radius: 13px;
-            box-shadow: 0 0 5px #399089;
-            margin: 3px;
-            position: absolute;
-            top: -2px;
-            left:-8px;
-            padding: 0!important;
-            color:@fg-arv_main-color;
-            span {
+          color: #ddf8c6;
+          text-align: center;
+          font-size: 17px;
+          line-height: 18px;
+          font-weight: bold;
+          overflow: visible;
+          font-family: 'Terminal Dosis', sans-serif;
+          text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+          margin-left:3px;
+          position: relative;
+          border: 1px solid #c2e1f5;
+          width: 17px;
+          height: 17px;
+          border-radius: 2px;
+          &:before, &:after {
+                top: 100%;
+                left: 50%;
+                border: solid transparent;
+                content: " ";
+                height: 0;
+                width: 0;
                 position: absolute;
-                top: -10px;
-                left: -4px;
+                pointer-events: none;
+            }
+            &:before {
+                  border-color: rgba(194, 225, 245, 0);
+                  border-width: 9px;
+                  margin-left: -9px;
+            }
+            &:after {
+                  border-color: rgba(136, 183, 213, 0);
+                  border-width: 8px;
+                  margin-left: -8px;
             }
         }
         .row-head{
           margin-bottom: 10px;
           padding-top:5px;
+        }
+        .marker-0 {
+            background: @fg-arv_marker-0;
+            &:after{
+                  border-top-color: @fg-arv_marker-0;
+            }
+        }
+
+        .marker-1 {
+            background: @fg-arv_marker-1;
+            &:after{
+                  border-top-color: @fg-arv_marker-1;
+            }
+        }
+
+        .marker-2 {
+            background: @fg-arv_marker-2;
+            &:after{
+                  border-top-color: @fg-arv_marker-2;
+            }
+        }
+
+        .marker-3 {
+            background: @fg-arv_marker-3;
+            &:after{
+                  border-top-color: @fg-arv_marker-3;
+            }
+        }
+
+        .marker-4 {
+            background: @fg-arv_marker-4;
+            &:after{
+                  border-top-color: @fg-arv_marker-4;
+            }
+        }
+
+        .marker-5{
+            background: @fg-arv_marker-5;
+            &:after{
+                  border-top-color: @fg-arv_marker-5;
+            }
+        }
+
+        .marker-6{
+            background: @fg-arv_marker-6;
+            &:after{
+                  border-top-color: @fg-arv_marker-6;
+            }
+        }
+
+        .marker-7{
+            background: @fg-arv_marker-7;
+            &:after{
+                  border-top-color: @fg-arv_marker-7;
+            }
+        }
+
+        .marker-8{
+            background: @fg-arv_marker-8;
+            &:after{
+                  border-top-color: @fg-arv_marker-8;
+            }
         }
     }
     .row {
@@ -201,14 +278,20 @@
         }
     }
     .panel-route.selected {
-        background-color: #f1f1f1;
+        background-color: #f1f1f1;        
+        .steps-panel {
+            background-color: #f1f1f1;            
+            .step-squema {
+                background-color: #f1f1f1;
+            }
+        }
     }
     .steps-panel {
-        padding: 0;
+        padding-left: 25px;
         margin-bottom: 0;
         overflow-y: overlay;
         overflow-x: hidden;
-        background-color: #f1f1f1;
+        background-color: white;
         @media screen {
             @media (max-width: @fg-arv_mobile-break-max) {
                 overflow: hidden;
@@ -268,7 +351,7 @@
             }
             .step-squema {
                 display: table;
-                background-color: #f1f1f1;
+                background-color: white;
                 padding-left:10px;
                 padding-top:1px;
                 .transbord-station {
