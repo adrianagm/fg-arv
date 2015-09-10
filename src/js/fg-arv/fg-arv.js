@@ -38,16 +38,16 @@ var FG_ARV;
 		}
 	});
 
-	requirejs(['fg-arv/builder'], function(jpBuilder) {
-		var old_FG_ARV = FG_ARV;
-		FG_ARV = jpBuilder.createInteractionObject();
-		FG_ARV.contextReq = old_FG_ARV.contextReq;
-		FG_ARV.version = old_FG_ARV.version;
-		if (old_FG_ARV.queue.length > 0) {
-			for (var x = 0; x < old_FG_ARV.queue.length; x++) {
-				FG_ARV.init(old_FG_ARV.queue[x]);
-			}
-		}
-	});
+  requirejs(['fg-arv/builder'], function(jpBuilder) {
+    var old_FG_ARV = FG_ARV;
+    FG_ARV = jpBuilder.createInteractionObject();
+    FG_ARV.contextReq = old_FG_ARV.contextReq;
+    FG_ARV.version = old_FG_ARV.version;
+    if (old_FG_ARV.queue.length > 0) {
+      for (var x = 0; x < old_FG_ARV.queue.length; x++) {
+        FG_ARV.init(old_FG_ARV.queue[x]);
+      }
+    }
+  });
 
 })();

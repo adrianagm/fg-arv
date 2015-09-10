@@ -150,25 +150,8 @@
           container: rootElement.find(".fg-arv_time-component"),
           date: this.dateComponent.getDate()
         });
-        widget.reinitialise(apiObject);
-        var from = widget.fromComponent.getValue().name;
-        var to = widget.toComponent.getValue().name;
-        var dateDeparture = widget.dateComponent.getDate();
-        var timeDeparture = widget.timeComponent;
-        var travelDate = new Date(dateDeparture.getFullYear(), dateDeparture.getMonth(), dateDeparture.getDate(), timeDeparture.getHours(), timeDeparture.getMinutes());
 
-        var opt = {
-          departureTime: utils.isDate(travelDate) ? travelDate : false,
-          arrivalTime: false,
-          departureDirection: from,
-          arrivalDirection: to
-        };
-
-        if (from !== '' && to !== '') {
-          getJourney(from, to, opt);
-        }
-
-        function getJourney(from, to, opt) {
+        this.getJourney = function(from, to, opt) {
 
           googleHelper.getJourney(from, to, opt).done(function(response) {
             var mapViewComponent = mapView.createComponent({
@@ -200,7 +183,26 @@
               //No routes
             });
 
+        };
+
+        widget.reinitialise(apiObject);
+        var from = widget.fromComponent.getValue().name;
+        var to = widget.toComponent.getValue().name;
+        var dateDeparture = widget.dateComponent.getDate();
+        var timeDeparture = widget.timeComponent;
+        var travelDate = new Date(dateDeparture.getFullYear(), dateDeparture.getMonth(), dateDeparture.getDate(), timeDeparture.getHours(), timeDeparture.getMinutes());
+
+        var opt = {
+          departureTime: utils.isDate(travelDate) ? travelDate : false,
+          arrivalTime: false,
+          departureDirection: from,
+          arrivalDirection: to
+        };
+
+        if (from !== '' && to !== '') {
+          widget.getJourney(from, to, opt);
         }
+
 
 
       };
@@ -237,6 +239,7 @@
         close: function() {
           // TODO Free any resource and close.
         },
+
         //------------------------------------------------------------------------------------------------------------------------------
         /**
          * Returns a property value from the API Object. If the object returned by de the API Object was a function,
@@ -258,6 +261,9 @@
           }
           return null;
         }
+
+
+
       });
 
       var module = {
@@ -266,7 +272,12 @@
         },
         getMap: function() {
           return mapInstance;
+        },
+        getJourney: function(from, to, opt) {
+          new MapWidget().getJourney(from, to, opt);
         }
+
+
       };
 
       return module;
