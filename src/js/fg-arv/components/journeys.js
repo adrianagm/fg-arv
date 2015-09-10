@@ -382,7 +382,6 @@
         jQuery(container).find('.info-journey-panel').css('max-height', height - 30 + 'px');
       }
       var heightHeader = jQuery(container).find('.panel-heading').height();
-      //jQuery(container).find('.panel-body').css('max-height', height - heightHeader - 39 + 'px');
       jQuery(container).find('.panel-body').css('max-height', height - 19 + 'px');
       jQuery(container).find('.info-journey-panel').css('position', 'relative');
       jQuery(container).find('.info-journey-panel').css('top', heightForm + 'px');
