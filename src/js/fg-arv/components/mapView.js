@@ -54,11 +54,14 @@
           init: function(routes) {
             if (_routes.length > 0) {
               component.clearRoutes();
+              _routes = [];
+              routeMarkers = [];
             }
             for (var i in routes) {
               component.drawSimpleRoute(routes[i]);
               component.addRouteMarker(routes[i], i);
               component.fitBounds(routes[i].bounds);
+
 
             }
           },
@@ -182,7 +185,7 @@
                 for (var step = 0; step < _routes[i].length; step++) {
                   _routes[i][step].setMap(null);
                 }
-                //_routes.splice(i, 1);
+                routeMarkers[i].setMap(null);
               }
             }
           },
@@ -190,8 +193,8 @@
             if (routeSelected) {
               component.deleteSelectedRoute();
             }
-            for (var i in _routes) {
-              var path = _routes[i].overview_path;
+            for (var i in routes) {
+              var path = routes[i].overview_path;
               if (JSON.stringify(path) === JSON.stringify(route.overview_path)) {
                 //Draw
                 component.drawSelectedRoute(route, true);
@@ -493,7 +496,7 @@
           map.setStreetView(panorama);
         } else {
           pano.innerHTML = 'Street View not available in this position';
-          fullscreen.display = 'none';
+          fullscreen.style.display = 'none';
         }
       }
 

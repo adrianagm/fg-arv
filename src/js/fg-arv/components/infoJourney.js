@@ -17,7 +17,6 @@
 
   define(['fg-arv/utils', 'fg-arv/components/stepByStep', 'fg-arv/libs/mustache'], function(utils, stepByStep, Mustache) {
 
-    var routeCount = -1;
 
     var module = {
       createComponent: function(config) {
@@ -146,7 +145,9 @@
         var route = conf.route.legs[0];
         var time = getInfoRouteGMTTime(conf);
         var infoRoute = {
+          color: conf.color,
           index: conf.index + 1,
+          routeCount: conf.index,
           summary: conf.route.summary,
           duration: route.duration ? route.duration.text : '',
           distance: route.distance ? route.distance.text : '',
@@ -276,9 +277,9 @@
     //*********************************************************
 
     function createTemplate(config) {
-      routeCount++;
+
       return "<div class='route-info-panel'><div class='row row-head'>" +
-        "<div class='col-xs-1'><div class='id-route marker-" + routeCount + "' style='border-color:{{color}}'><span>{{index}}</span></div></div>" +
+        "<div class='col-xs-1'><div class='id-route marker-{{routeCount}}' style='border-color:{{color}}'><span>{{index}}</span></div></div>" +
         "<div class='right col-xs-11 duration'>{{duration}} / {{distance}}.</div>" +
         "</div>" +
         "<div class='row row-transbord wrap'><div class='col-xs-9 wrap'>" +
@@ -379,26 +380,6 @@
 
     }
 
-    function getDistanceBetweenCoordinates(coord1, coord2) {
-      var lat1 = coord1.lat(),
-        lon1 = coord1.lng(),
-        lat2 = coord2.lat,
-        lon2 = coord2.lng,
-        rad = function(x) {
-          return x * Math.PI / 180;
-        };
-
-      var R = 6378.137;
-      var dLat = rad(lat2 - lat1);
-      var dLong = rad(lon2 - lon1);
-
-      var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(
-        dLong / 2) * Math.sin(dLong / 2);
-      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      var d = R * c;
-
-      return d.toFixed(3);
-    }
   });
 
 })();
