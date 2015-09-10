@@ -147,7 +147,6 @@
         var time = getInfoRouteGMTTime(conf);
         var infoRoute = {
           index: conf.index + 1,
-          color: conf.color,
           summary: conf.route.summary,
           duration: route.duration ? route.duration.text : '',
           distance: route.distance ? route.distance.text : '',
