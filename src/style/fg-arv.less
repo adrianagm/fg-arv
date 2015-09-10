@@ -50,7 +50,7 @@
         background-color: #F0D774;
         border-color: #E2AE08;
         font-weight: bold;
-        padding:4px;
+        padding: 4px;
     }
     .form {
         padding-left: 0;
@@ -232,7 +232,25 @@
     .map-control {
         margin: 5px 10px !important;
         &.complete {
-            display:none;
+            display: none;
+        }
+    }
+    .overlay-panel {
+        position: absolute;
+        overflow: hidden;
+        transform: translateZ(0px);
+        background-color: rgb(229, 227, 223);
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        .fullscreen-exit {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            z-index: 100;
+            background-color:#fff;
+            cursor: pointer;
         }
     }
     //------ Imports -------
@@ -242,5 +260,6 @@
     @import "components/combobox.less";
     @import "components/criteria.less";
     @import "components/journeys.less";
+    @import "components/ballons.less";
     @import "components/routeMarker.less";
 }
