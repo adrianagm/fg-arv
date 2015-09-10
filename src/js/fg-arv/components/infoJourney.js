@@ -145,7 +145,7 @@
         var route = conf.route.legs[0];
         var time = getInfoRouteGMTTime(conf);
         var infoRoute = {
-          color: conf.color,
+          routeColor: conf.color,
           index: conf.index + 1,
           routeCount: conf.index,
           summary: conf.route.summary,
@@ -279,7 +279,7 @@
     function createTemplate(config) {
 
       return "<div class='route-info-panel'><div class='row row-head'>" +
-        "<div class='col-xs-1'><div class='id-route marker-{{routeCount}}' style='border-color:{{color}}'><span>{{index}}</span></div></div>" +
+        "<div class='col-xs-1'><div class='id-route marker-{{routeCount}}' style='border-color:{{routeColor}}'><span>{{index}}</span></div></div>" +
         "<div class='right col-xs-11 duration'>{{duration}} / {{distance}}.</div>" +
         "</div>" +
         "<div class='row row-transbord wrap'><div class='col-xs-9 wrap'>" +

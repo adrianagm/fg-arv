@@ -495,8 +495,9 @@
           var map = new google.maps.Map(mapPano);
           map.setStreetView(panorama);
         } else {
-          pano.innerHTML = 'Street View not available in this position';
           fullscreen.style.display = 'none';
+          pano.innerHTML = 'Street View not available in this position';
+
         }
       }
 
