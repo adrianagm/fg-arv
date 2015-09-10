@@ -174,7 +174,9 @@
             var mapViewComponent = mapView.createComponent({
               map: widget.getMap(),
               routes: response,
-              colors: COLORS
+              colors: COLORS,
+              widgetElement: widget.widgetElement.children()
+
             });
             journeys.createComponent({
               container: rootElement.find(

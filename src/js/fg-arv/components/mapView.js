@@ -31,12 +31,14 @@
     }
   };
 
-  define(['fg-arv/utils', 'fg-arv/google-helper', 'fg-arv/components/journeys', 'fg-arv/libs/mustache'], function(utils, googleHelper, journeys, Mustache) {
+
+  define(['fg-arv/utils', 'fg-arv/google-helper', 'fg-arv/components/journeys', 'fg-arv/libs/mustache', 'fg-arv/libs/infobubble'], function(utils, googleHelper, journeys, Mustache) {
     var _routes = [],
       routeSelected = [],
       infowindows = [],
       routeFocus = [],
       routes,
+      infowindowBubble,
       map;
 
     var module = {
@@ -45,10 +47,13 @@
         map = config.map;
         routes = config.routes;
 
+
         component = {
           init: function(routes) {
             for (var i in routes) {
               component.drawSimpleRoute(routes[i]);
+              component.fitBounds(routes[i].bounds);
+              _routes.push(routes[i]);
             }
           },
           drawSimpleRoute: function(route) {
@@ -86,8 +91,7 @@
                 journeys.leaveRoutePanel(route);
               });
             }
-            component.fitBounds(route.bounds);
-            _routes.push(route);
+
 
           },
           drawSelectedRoute: function(route, selected) {
@@ -114,15 +118,54 @@
                     strokeColor: steps[s].transit.line.color,
                   });
                 }
+                //add stops
+                if (selected) {
+                  if (steps[s - 1] && steps[s - 1].transit) {
+                    routeSelected.push(component.addStop(steps[s].transit, 'stop', steps[s - 1].transit));
+                  } else {
+                    routeSelected.push(component.addStop(steps[s].transit, 'departure'));
+                  }
+                  if (!steps[s + 1] || !steps[s + 1].transit) {
+                    routeSelected.push(component.addStop(steps[s].transit, 'arrival'));
+                  }
+
+                }
               }
               selected ? routeSelected.push(step) : routeFocus.push(step);
             }
+          },
+          addStop: function(stop, type, beforeStop) {
+            var stopMarker = new google.maps.Marker({
+              map: map,
+              position: type == 'arrival' ? stop.arrival_stop.location : stop.departure_stop.location,
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                strokeColor: '#000',
+                fillColor: '#fff',
+                fillOpacity: 1,
+                strokeWeight: 2.0,
+                zIndex: 1000,
+                scale: 5
+              },
+              title: type == 'arrival' ? stop.arrival_stop.name : stop.departure_stop.name
+
+            });
+            var stopInfo = {
+              stopName: type == 'arrival' ? stop.arrival_stop.name : stop.departure_stop.name,
+              departureTime: type == 'arrival' ? false : stop.departure_time.text,
+              arrivalTime: type == 'arrival' ? stop.arrival_time.text : type == 'departure' ? false : beforeStop.arrival_time.text
+            };
+            component.addStopListeners(stopMarker, stop, stopInfo);
+            return stopMarker;
           },
           deleteSelectedRoute: function() {
             for (var step = 0; step < routeSelected.length; step++) {
               routeSelected[step].setMap(null);
             }
             routeSelected = [];
+            if (infowindowBubble && infowindowBubble.isOpen) {
+              infowindowBubble.close();
+            }
           },
           deleteSimpleRoute: function(route) {
             for (var i in _routes) {
@@ -163,7 +206,7 @@
               routeFocus[step].setMap(null);
             }
             routeFocus = [];
-            component.leaveInfowindow();
+            //component.leaveInfowindow();
           },
           clearRoutes: function() {
             if (routeSelected) {
@@ -251,6 +294,67 @@
             }
 
             infowindows[index].open(conf.map);
+          },
+
+          addStopListeners: function(stopMarker, stop, info) {
+            component.focusLeaveStop(stopMarker, stop);
+            component.clickOnStop(stopMarker, stop, info);
+          },
+
+          focusLeaveStop: function(stopMarker, stop) {
+            google.maps.event.addListener(stopMarker, 'mouseover', function() {
+              var icon = stopMarker.getIcon();
+              icon.scale = 6;
+              stopMarker.setIcon(icon);
+            });
+            google.maps.event.addListener(stopMarker, 'mouseout', function() {
+              var icon = stopMarker.getIcon();
+              icon.scale = 5;
+              stopMarker.setIcon(icon);
+            });
+          },
+          clickOnStop: function(stopMarker, stop, info) {
+            stopMarker.iw = component.createIW(stopMarker, stop, info);
+
+            google.maps.event.addListener(stopMarker, 'click', function() {
+              if (infowindowBubble) {
+                infowindowBubble.close();
+              }
+              infowindowBubble = stopMarker.iw;
+              infowindowBubble.open(map, stopMarker);
+            });
+
+          },
+
+          createIW: function(stopMarker, stop, info) {
+            var iw = new InfoBubble();
+            var stopInfo = {
+              stopName: info.stopName,
+              departureTime: info.departureTime ? info.departureTime : false,
+              arrivalTime: info.arrivalTime ? info.arrivalTime : false,
+              line: stop.line,
+              headsign: stop.headsign,
+              num_stops: stop.num_stops,
+              agency: stop.line.agencies ? stop.line.agencies[0].name : false,
+              vehicle: stop.line.vehicle ? stop.line.vehicle.name : false
+
+            };
+
+            var tabs = [{
+              label: 'Stop info',
+              template: Mustache.render(createIWTemplate(), stopInfo)
+
+            }, {
+              label: 'Street View',
+              template: createSVTemplate()
+
+            }];
+            for (var tab in tabs) {
+              iw.addTab(tabs[tab].label, tabs[tab].template);
+            }
+
+            openStreetTabListener(stopMarker, iw, config.widgetElement);
+            return iw;
           }
         };
         component.init(routes);
@@ -279,6 +383,88 @@
         "</div>" +
 
         "</div>";
+    }
+
+    function createIWTemplate() {
+      return "<div class='balloon data-tab content'>" +
+        "<h5>{{stopName}}</h5>" +
+        "<table>" +
+        "{{#arrivalTime}}<tr class='data-item'><td>Arrival: </td><td>{{arrivalTime}}</td></tr>{{/arrivalTime}}" +
+        "{{#departureTime}}<tr class='data-item'><td>Departure: </td><td>{{departureTime}}</td></tr>{{/departureTime}}" +
+        "{{#departureTime}}<tr class='data-item'><td>Headsign: </td><td>{{headsign}}</td></tr>{{/departureTime}}" +
+        "{{#departureTime}}<tr class='data-item'><td>Line: </td><td><img class='icon' src={{line.vehicle.icon}} {{#vehicle}}title='{{vehicle}}'{{/vehicle}}> <span class='line' style='background-color:{{line.color}};color:{{line.text_color}}' {{#agency}}title='{{agency}}'{{/agency}}>{{line.short_name}} </span><span> ({{num_stops}} stops)</span></td></tr>{{/departureTime}}" +
+        "</table></div>";
+
+    }
+
+    function createSVTemplate() {
+      return '<div class="balloon street-tab content"><div class="pano"></div><div class="map-pano"></div><span class="zmdi zmdi-fullscreen zmdi-hc-2x zmdi-hc-border pull-left fullscreen" title="Fullscreen"></span></span></div>';
+
+    }
+
+    function openStreetTabListener(marker, iw, widget) {
+      google.maps.event.addDomListener(iw, 'content_changed', function() {
+        google.maps.event.addDomListener(iw, 'domready', function() {
+          if (iw.content_.querySelectorAll('.pano')[0]) {
+            initializeStreetView(marker, widget);
+          }
+
+        });
+
+      });
+    }
+
+    function initializeStreetView(marker, widget) {
+      var mapPano = marker.iw.content_.querySelectorAll('.map-pano')[0];
+      var pano = marker.iw.content_.querySelectorAll('.pano')[0];
+      var heading = 90;
+      var pitch = 5;
+      var panoramaOptions = {
+        position: marker.position,
+        pov: {
+          heading: heading,
+          pitch: pitch
+        },
+        panControl: false
+      };
+
+      var sv = new google.maps.StreetViewService();
+      sv.getPanoramaByLocation(marker.position, 50, processSVData);
+
+      var overlay = document.createElement('div');
+      var fullscreen = marker.iw.content_.querySelectorAll('.fullscreen')[0];
+      jQuery(fullscreen).click(function() {
+
+        overlay.className = 'overlay-panel';
+        var exit = document.createElement('span');
+        exit.className = 'zmdi zmdi-fullscreen-exit zmdi-hc-2x zmdi-hc-border pull-left fullscreen-exit';
+        exit.title = 'Exit Fullscreen';
+        jQuery(exit).click(function() {
+          overlay.parentNode.removeChild(overlay);
+        });
+        overlay.appendChild(exit);
+        widget[0].appendChild(overlay);
+        sv.getPanoramaByLocation(marker.position, 50, processSVFullscreennData);
+      });
+
+      function processSVData(data, status) {
+        if (status == google.maps.StreetViewStatus.OK) {
+          var panorama = new google.maps.StreetViewPanorama(pano, panoramaOptions);
+          var map = new google.maps.Map(mapPano);
+          map.setStreetView(panorama);
+        } else {
+          pano.innerHTML = 'Street View not available in this position';
+          fullscreen.display = 'none';
+        }
+      }
+
+      function processSVFullscreennData(data, status) {
+        if (status == google.maps.StreetViewStatus.OK) {
+          var panorama = new google.maps.StreetViewPanorama(overlay, panoramaOptions);
+          var map = new google.maps.Map(mapPano);
+          map.setStreetView(panorama);
+        }
+      }
     }
 
     function infowindowlisteners(infowindow) {

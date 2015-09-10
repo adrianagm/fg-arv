@@ -1,0 +1,142 @@
+/*
+    Styles for map infowindows aka ballons.
+*/
+
+.bubble {
+    z-index: 1000 !important;
+    font-size: 12px;
+    width: 250px !important;
+}
+
+.tabs-container {
+    width: 200px;
+}
+
+.balloon {
+    border-color: #eee;
+}
+
+.balloon-content {
+    background-color: white;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
+    border-bottom-left-radius: 0.5em;
+    padding: 10px;
+    overflow: hidden !important;
+}
+
+.contentContainer {
+    height: 150px !important;
+    width: 250px !important;
+    padding: 0 !important;
+}
+
+.tabsContainer {
+    width: 250px !important;
+    padding-left: 0px !important;
+    div {
+        padding-right: 15px !important;
+    }
+}
+
+.balloon.content {
+    width: 250px;
+    height: 120px;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.ballon.data-tab {
+    height: 120px;
+}
+
+.balloon .pano {
+    position: relative;
+    width: 100%;
+    height: 130px;
+}
+
+.balloon .map-pano {
+    display: none;
+}
+
+.balloon-tab {
+    background-color: @fg-arv_main-color;
+    color: #fff;
+    font-weight: bold;
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-right: 1px #ccc solid;
+    overflow-x: hidden;
+}
+
+.balloon-tab:hover {
+    background-color: rgba(188, 20, 26, 0.8);
+}
+
+.balloon-active-tab,
+.balloon-active-tab:hover {
+    background-color: white;
+    color: #000;
+}
+
+.balloon-close-button {
+    height: 10px;
+    width: 10px;
+    position: absolute;
+    top: 36px!important;
+    right: 5px!important
+}
+
+.balloon-arrow-container {
+    /*  background-image: url('../images/arrow.png');
+     background-size: 50px 50px;
+     margin-left: 140px;
+     height: 50px;
+     width: 50px;
+     top:-12px;*/
+}
+
+.balloon-arrow {
+    border-color: rgb(255, 255, 255) transparent transparent;
+    border-style: solid;
+    /*if backgroundImage in .balloon-arrow-container*/
+    /*display:none;*/
+}
+
+
+/*Data tab*/
+
+.balloon.data-tab table {
+    width: 100%;
+}
+
+.balloon.data-tab .data-item {
+    width: 100%;
+}
+
+.balloon.data-tab .data-item td {
+    padding: 2px;
+    .icon {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.fullscreen {
+    position: absolute;
+    top: 12px;
+    left: 206px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+
