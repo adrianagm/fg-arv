@@ -203,8 +203,9 @@
           widget.getJourney(from, to, opt);
         }
 
-
-
+        //########SPRINT 2########################
+        window.widget = widget;
+        //########END SPRINT 2########################
       };
 
 
@@ -272,9 +273,6 @@
         },
         getMap: function() {
           return mapInstance;
-        },
-        getJourney: function(from, to, opt) {
-          new MapWidget().getJourney(from, to, opt);
         }
 
 

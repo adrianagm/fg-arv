@@ -50,13 +50,17 @@
 
         component = {
           init: function(routes) {
+            if (_routes.length > 0) {
+              component.clearRoutes();
+            }
             for (var i in routes) {
               component.drawSimpleRoute(routes[i]);
               component.fitBounds(routes[i].bounds);
-              _routes.push(routes[i]);
+
             }
           },
           drawSimpleRoute: function(route) {
+            var simpleRoute = [];
             var path = route.overview_path;
             var steps = route.legs[0].steps;
             for (var s = 0; s < steps.length; s++) {
@@ -90,8 +94,10 @@
               google.maps.event.addListener(clickLine, 'mouseout', function(h) {
                 journeys.leaveRoutePanel(route);
               });
-            }
 
+              simpleRoute.push(step);
+            }
+            _routes.push(simpleRoute);
 
           },
           drawSelectedRoute: function(route, selected) {
@@ -170,8 +176,10 @@
           deleteSimpleRoute: function(route) {
             for (var i in _routes) {
               if (_routes[i] === route) {
-                _routes[i].setMap(null);
-                _routes.splice(i, 1);
+                for (var step = 0; step < _routes[i].length; step++) {
+                  _routes[i][step].setMap(null);
+                }
+                //_routes.splice(i, 1);
               }
             }
           },

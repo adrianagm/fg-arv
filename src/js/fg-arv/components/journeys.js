@@ -300,16 +300,22 @@
       },
       focusOnRoutePanel: function(route) {
         var routePanel = this.getPanelByRoute(route);
-        routePanel.focusOnRoute();
+        if (routePanel) {
+          routePanel.focusOnRoute();
+        }
       },
       leaveRoutePanel: function(route) {
         var routePanel = this.getPanelByRoute(route);
-        routePanel.leaveRoute();
+        if (routePanel) {
+          routePanel.leaveRoute();
+        }
       },
       clickOnRoutePanel: function(route) {
         componentElement.find('.panel-route').removeClass('selected');
         var routePanel = this.getPanelByRoute(route);
-        routePanel.clickOnRoute();
+        if (routePanel) {
+          routePanel.clickOnRoute();
+        }
 
       }
 

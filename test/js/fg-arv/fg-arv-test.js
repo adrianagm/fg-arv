@@ -38,8 +38,6 @@ var FG_ARV_TEST;
     }
   });
 
-
-
   requirejs(['fg-arv-test/test'], function(jpBuilder) {
     var old_FG_ARV = FG_ARV_TEST;
     FG_ARV_TEST.contextReq = old_FG_ARV.contextReq;
@@ -50,6 +48,5 @@ var FG_ARV_TEST;
       }
     }
   });
-
 
 })();
