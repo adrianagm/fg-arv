@@ -1,7 +1,7 @@
 (function() {
 
   "use strict";
-
+  var COLORS = ['#BE81F7', '#48b5e9', '#81F7BE', '#FA5882', '#FACC2E', '#04B4AE', '#F79F81', '#8181F7', '#5FB404'];
   define(['fg-arv/constants', 'fg-arv/utils', 'fg-arv/templates', 'fg-arv/components/locationInput', 'fg-arv/components/datepicker',
       'fg-arv/components/time', 'fg-arv/components/combobox', 'fg-arv/google-helper', 'fg-arv/components/mapView', 'fg-arv/components/journeys'
     ],
@@ -173,7 +173,8 @@
           googleHelper.getJourney(from, to, opt).done(function(response) {
             var mapViewComponent = mapView.createComponent({
               map: widget.getMap(),
-              routes: response
+              routes: response,
+              colors: COLORS
             });
             journeys.createComponent({
               container: rootElement.find(
@@ -189,6 +190,7 @@
                 .departureDirection,
               arrivalDirection: opt.arrivalDirection,
               mapViewComponent: mapViewComponent,
+              colors: COLORS,
               message: 'Ooops! We are having problems with the route for improvement works. We estimate will be resolved in four days'
             });
           })
